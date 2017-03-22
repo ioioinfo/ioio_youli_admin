@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="right-nav">
+  <span>&nbsp;</span><span>图片</span><span class="word-information">文字信息</span>
+</div>
+<div class="warp">
+{% if rows.length ==0 %}
+	<img class="images" src="images/img-12.png" alt="">
+{% else %}
+	{% for project_info in rows %}
+	  <div class="right-nav-height">
+		<span class="checkbox"></span>
+		<span class="adimg"><img src="http://211.149.248.241:8000/images/youli/{{project_info.project.main_image_url}}" alt=""></span>
+		<span class="ad">
+		  <p class="ad-word1"><img src="{{project_info.wx_user.headimgurl}}" width="20px" alt=""/> {{project_info.wx_user.name}}&nbsp; {{project_info.wx_user.nickname}} &nbsp; {{project_info.wx_user.mobile}} </p>
+		  <p class="ad-word1">{{project_info.project.name}}&nbsp;{{project_info.project.address}} </p>
+		  <p class="ad-word1">预约时间：&nbsp;{{project_info.subscribe_time_text}}&nbsp;{% if project_info.recommender_wx_user %}推荐人:{{project_info.recommender_wx_user.name}}&nbsp; {{project_info.recommender_wx_user.mobile}}{% endif %}</p>
+
+		  <div class="ad-word2"><span class="money">实际消费金额：&nbsp;{{project_info.contract_amount_text}}元&nbsp;&nbsp;&nbsp;实际返利金额：&nbsp;{{project_info.shiji_fanli_amount}}元</span><p class="rebate"><span class="rebate1">预约返利{{project_info.project.fanli_text}}</span><span class="rebate1">推荐返利{{project_info.project.tuijian_fanli_text}}</span></p></div>
+		</span>
+	  </div>
+	{% endfor %}
+{% endif %}
+</div>
+{% endblock %}
+{% block script %}
+<script>
+	$(function() {
+		$(".fan2").addClass("bottom-ul-style");
+	});
+</script>
+{% endblock %}
