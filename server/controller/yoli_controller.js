@@ -6,12 +6,20 @@ var youli_service = "http://211.149.248.241:17002";
 var path = require('path');
 var fs = require('fs');
 
+var state_map = {
+	"edit" : "新建",
+	"shelve" : "上架",
+	"approve" : "发布"
+};
+var cash_map = {
+	"approve" : "已发放"
+};
 
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
 			var content = JSON.parse(body);
-			cb(false, content);
+			do_result(false, content, cb);
 		} else {
 			cb(true, null);
 		}
@@ -21,11 +29,22 @@ var do_post_method = function(data,url,cb){
 	uu_request.request(url, data, function(err, response, body) {
 		console.log(body);
 		if (!err && response.statusCode === 200) {
-			cb(false,body);
+			do_result(false, body, cb);
 		} else {
 			cb(true,null);
 		}
 	});
+};
+var do_result = function(err,result,cb){
+	if (!err) {
+		if (result.success) {
+			cb(false,result);
+		}else {
+			cb(true,result);
+		}
+	}else {
+		cb(true,null);
+	}
 };
 //登入检查
 var login_check = function(data,cb){
@@ -39,12 +58,12 @@ var confirm_order = function(data,cb){
 };
 //项目上架
 var up_project = function(data,cb){
-	var url = youli_service + "/shop/project/shelve";
+	var url = youli_service + "/admin/project/shelve";
 	do_post_method(data,url,cb);
 };
 //项目下架
 var down_project = function(data,cb){
-	var url = youli_service + "/shop/project/unshelve";
+	var url = youli_service + "/admin/project/unshelve";
 	do_post_method(data,url,cb);
 };
 //保存项目
@@ -85,13 +104,13 @@ var get_tenant_info = function(id,cb){
 	do_get_method(url,cb);
 };
 //待确认信息
-var daiqueren = function(id,cb){
-	var url = youli_service + "/shop/orders/daiqueren?tenant_id=" + id;
+var daiqueren = function(user_id,cb){
+	var url = youli_service + "/admin/orders/daiqueren?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取商家已确认信息
-var yiqueren = function(id,cb){
-	var url = youli_service + "/shop/orders/yiqueren?tenant_id=" + id;
+var yiqueren = function(user_id,cb){
+	var url = youli_service + "/admin/orders/yiqueren?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取商家已完成项目
@@ -100,38 +119,38 @@ var yiwancheng = function(id,cb){
 	do_get_method(url,cb);
 };
 //获取商家申诉项目
-var shensuzhong = function(id,cb){
-	var url = youli_service + "/shop/orders/shensuzhong?tenant_id=" + id;
+var shensuzhong = function(user_id,cb){
+	var url = youli_service + "/admin/orders/shensuzhong?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取项目详细数量
-var project_detail_number = function(id,cb){
-	var url = youli_service + "/shop/summary?tenant_id=" + id;
+var project_detail_number = function(user_id,cb){
+	var url = youli_service + "/admin/summary?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取登入用户信息
 var get_login_user = function(user_id,cb){
-	var url = youli_service + "/shop/user/" + user_id;
+	var url = youli_service + "/admin/user/" + user_id;
 	do_get_method(url,cb);
 };
 //获取未上架项目信息
-var unshelve_projects = function(id,cb){
-	var url = youli_service + "/shop/unshelve_projects?tenant_id=" + id;
+var unshelve_projects = function(user_id,cb){
+	var url = youli_service + "/admin/unshelve_projects?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取未审核项目信息
-var shelve_projects = function(id,cb){
-	var url = youli_service + "/shop/shelve_projects?tenant_id=" + id;
+var shelve_projects = function(user_id,cb){
+	var url = youli_service + "/admin/shelve_projects?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取已发布项目信息
-var approve_projects = function(id,cb){
-	var url = youli_service + "/shop/approve_projects?tenant_id=" + id;
+var approve_projects = function(user_id,cb){
+	var url = youli_service + "/admin/approve_projects?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //客户预约列表
-var customer_order = function(id,cb){
-	var url = youli_service + "/shop/orders/yiyuyue?tenant_id=" + id;
+var customer_order = function(user_id,cb){
+	var url = youli_service + "/admin/orders/yiyuyue?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //查看指定项目
@@ -140,14 +159,59 @@ var check_project = function(id,cb){
 	do_get_method(url,cb);
 };
 //查询所有商户信息
-var get_tenant_infos = function(cb){
-	var url = youli_service + "/shop/project/"
+var get_tenant_infos = function(user_id,cb){
+	var url = youli_service + "/admin/tenants?user_id="+user_id;
+	do_get_method(url,cb);
+};
+//新增商户信息
+var add_tenant = function(data,cb){
+	var url = youli_service + "/admin/add_tenant"
+	do_post_method(data,url,cb);
+}
+//创建商户账号
+var create_account = function(data,cb){
+	var url = youli_service + "/admin/tenant_user/create"
+	do_post_method(data,url,cb);
+}
+//更新商户信息
+var update_tenant = function(data,cb){
+	var url = youli_service + "/admin/update_tenant"
+	do_post_method(data,url,cb);
+}
+//查询未提现列表
+var pre_get_cash = function(user_id,cb){
+	var url = youli_service + "/admin/withdraw/list_all?user_id="+user_id;
+	do_get_method(url,cb);
+}
+//查询项目明细
+var find_project_detail = function(id,cb){
+	var url = youli_service + "/admin/project/"+id;
+	do_get_method(url,cb);
+}
+//改变推荐人是否有效接口
+var change_recommender_valid = function(data,cb){
+	var url = youli_service + "/admin/orders/change_recommender_valid"
+	do_post_method(data,url,cb);
+}
+//提现接口
+var get_cash = function(data,cb){
+	var url = youli_service + "/admin/withdraw/confirm"
+	do_post_method(data,url,cb);
+}
+// 审核
+var vertify = function(data,cb){
+	var url = youli_service + "/admin/project/approve"
+	do_post_method(data,url,cb);
+}
+//查询所有项目
+var project_list = function(user_id,cb){
+	var url = youli_service + "/admin/all_projects?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 exports.register = function(server, options, next){
-	var search_projects_infos = function(id,user_id,cb){
-		var ep =  eventproxy.create("tenant_info","project_num_info","subscribes_num_info","login_user",function(tenant_info,project_num_info,subscribes_num_info,login_user){
-			cb(false,{"tenant_info":tenant_info,"project_num_info":project_num_info,"subscribes_num_info":subscribes_num_info,"login_user":login_user});
+	var search_projects_infos = function(user_id,cb){
+		var ep =  eventproxy.create("project_num_info","subscribes_num_info","login_user",function(project_num_info,subscribes_num_info,login_user){
+			cb(false,{"project_num_info":project_num_info,"subscribes_num_info":subscribes_num_info,"login_user":login_user});
 		});
 		get_login_user(user_id,function(err,row){
 			if (!err) {
@@ -161,19 +225,7 @@ exports.register = function(server, options, next){
 				cb(true,{"message":"search login_user wrong","service_info":service_info});
 			}
 		});
-		get_tenant_info(id,function(err,row){
-			if (!err) {
-				if (row.success) {
-					var tenant_info = row.row;
-					ep.emit("tenant_info", tenant_info);
-				}else {
-					ep.emit("tenant_info", {});
-				}
-			}else {
-				cb(true,{"message":"search tenant_info wrong","service_info":service_info});
-			}
-		});
-		project_detail_number(id,function(err,row){
+		project_detail_number(user_id,function(err,row){
 			if (!err) {
 				if (row.success) {
 					var project_num_info = row.projects;
@@ -190,6 +242,228 @@ exports.register = function(server, options, next){
 		});
 	};
 	server.route([
+		//查询项目明细
+		{
+			method: 'GET',
+			path: '/find_project_detail',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var id = request.query.id;
+				if (!id) {
+					return reply({"success":false,"message":"param wrong"});
+				}
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						find_project_detail(id,function(err,row){
+							if (!err) {
+								return reply({"success":true,"message":"ok","row":row.project});
+							}else {
+								return reply({"success":false,"message":result.message});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//推荐人有效的 接口
+		{
+			method: 'POST',
+			path: '/change_recommender_valid',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var is_valid = request.payload.is_valid;
+				var id = request.payload.id;
+				if (!is_valid||!id) {
+					return reply({"success":false,"message":"params wrong"});
+				}
+				var data = {"id":id,"user_id":user_id,"is_valid":is_valid};
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						change_recommender_valid(data,function(err,result){
+							if (!err) {
+								return reply({"success":true,"message":"ok"});
+							}else {
+								return reply({"success":false,"message":result.message});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//管理员项目列表 project_list
+		{
+			method: 'GET',
+			path: '/project_list',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						project_list(user_id,function(err,rows){
+							if (!err) {
+								return reply.view("project_list",{"rows":rows.rows,"results":results});
+							}else {
+								return reply({"success":false,"message":rows.message,"results":results,"service_info":rows.service_info});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//审核
+		{
+			method: 'POST',
+			path: '/vertify',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var data = {};
+				data.project_id = request.payload.project_id;
+				data.user_id = user_id;
+				console.log("data:"+JSON.stringify(data));
+				vertify(data, function(err,rows){
+					if (!err) {
+						if (rows.success) {
+							return reply({"success":true,"service_info":service_info});
+						}else {
+							return reply({"success":false,"message":rows.message,"service_info":service_info});
+						}
+					}else {
+						return reply({"success":false,"message":"operation wrong","service_info":service_info});
+					}
+				});
+			}
+		},
+		//提现接口
+		{
+			method: 'POST',
+			path: '/get_cash',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var id = request.payload.id;
+				if (!id) {
+					return reply({"success":false,"message":"id is null"});
+				}
+				var data = {"user_id":user_id,"id":id};
+				get_cash(data,function(err,result){
+					if (!err) {
+						return reply({"success":true,"service_info":service_info});
+					}else {
+						return reply({"success":false,"message":result.message,"service_info":service_info});
+					}
+				});
+			}
+		},
+		//查询未提现列表
+		{
+			method: 'GET',
+			path: '/pre_get_cash',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						pre_get_cash(user_id,function(err,rows){
+							if (!err) {
+								return reply.view("pre_get_cash",{"rows":rows.rows,"results":results,"service_info":service_info,"cash_map":cash_map});
+							}else {
+								return reply({"success":false,"message":result.message,"service_info":results.service_info});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//修改商户
+		{
+			method: 'GET',
+			path: '/update_tenant',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var data = request.query.data;
+				data = JSON.parse(data);
+				data.user_id = user_id;
+				update_tenant(data,function(err,result){
+					if (!err) {
+						if (result.success) {
+							return reply({"success":true,"message":"ok"});
+						}else {
+							return reply({"success":false,"message":result.message});
+						}
+					}else {
+						return reply({"success":false,"message":result.message});
+					}
+				});
+			}
+		},
+		//新增商户
+		{
+			method: 'GET',
+			path: '/add_tenant',
+			handler: function(request, reply){
+				var id = get_cookie_id(request);
+				if (!id) {
+					return reply.redirect("/login");
+				}
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var data = request.query.data;
+				data = JSON.parse(data);
+				data.user_id = user_id;
+				add_tenant(data,function(err,result){
+					if (!err) {
+						if (result.success) {
+							var info = {
+								"username" : data.abbreviation,
+								"name" : "admin",
+								"password" : 123456,
+								"tenant_id" :result.id
+							};
+							create_account(info,function(err,row){
+								if (!err) {
+									return reply({"success":true,"message":"ok","id":result.id});
+								}else {
+									return reply({"success":false,"message":row.message});
+								}
+							});
+							return reply({"success":true,"message":"ok","id":result.id});
+						}else {
+							return reply({"success":false,"message":result.message});
+						}
+					}else {
+						return reply({"success":false,"message":result.message});
+					}
+				});
+			}
+		},
 		//查询所有商户信息
 		{
 			method: 'GET',
@@ -199,19 +473,38 @@ exports.register = function(server, options, next){
 				if (!id) {
 					return reply.redirect("/login");
 				}
-				get_tenant_infos(function(err,rows){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						if (rows.success) {
-							return reply({"success":true,"message":"ok"});
-						}else {
-							return reply({"success":false,"message":rows.message});
-						}
+						get_tenant_infos(user_id,function(err,rows){
+							if (!err) {
+								if (rows.success) {
+									return reply.view("tenant_list",{"success":true,"message":"ok","rows":rows.rows,"results":results,"projects":JSON.stringify(rows.rows)});
+								}else {
+									return reply({"success":false,"message":rows.message});
+								}
+							}else {
+								return reply({"success":false,"message":rows.message});
+							}
+						});
 					}else {
-						return reply({"success":false,"message":rows.message});
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
 					}
 				});
 			}
 		},
+		//查询用户admin信息  新 管理员修改账户信息接口
+		{
+			method: 'GET',
+			path: '/admin_info',
+			handler: function(request, reply){
+
+			}
+		},
+
 		//后台店家登入接口
 		{
 			method: 'GET',
@@ -242,7 +535,7 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						return reply.view("background_management",{"results":results});
 					}else {
@@ -259,17 +552,14 @@ exports.register = function(server, options, next){
 				var data = {};
 				data.username = request.payload.username;
 				data.password = request.payload.password;
-				data.tenant_code = request.payload.tenant_code;
 				login_check(data, function(err,row){
 					if (!err) {
 						if (row.success) {
-							var id = row.row.id;
 							var user_id = row.user_id;
 							var cookie = request.state.cookie;
 							if (!cookie) {
 								return reply({"success":false});
 							}
-							cookie.id = id;
 							cookie.user_id = user_id;
 							return reply({"success":true,"service_info":service_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 						}else {
@@ -305,17 +595,16 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-		//商家预约列表信息
+		//返利列表信息
 		{
 			method: 'GET',
 			path: '/project_order_infos',
 			handler: function(request, reply){
-				var cookie_id = get_cookie_id(request);
-				if (!cookie_id) {
+				var user_id = get_user_id(request);
+				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				var id = get_cookie_id(request);
-				daiqueren(id, function(err,rows){
+				daiqueren(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
 							console.log(rows);
@@ -342,9 +631,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						unshelve_projects(id, function(err,rows){
+						unshelve_projects(user_id, function(err,rows){
 							if (!err) {
 								if (rows.success) {
 									console.log(rows);
@@ -375,9 +664,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						shelve_projects(id, function(err,rows){
+						shelve_projects(user_id, function(err,rows){
 							if (!err) {
 								if (rows.success) {
 									console.log(rows);
@@ -408,9 +697,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						approve_projects(id, function(err,rows){
+						approve_projects(user_id, function(err,rows){
 							if (!err) {
 								if (rows.success) {
 									console.log(rows);
@@ -433,17 +722,13 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/customer_order',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						customer_order(id, function(err,rows){
+						customer_order(get_user_id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
@@ -475,9 +760,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						daiqueren(id, function(err,rows){
+						daiqueren(user_id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
@@ -509,9 +794,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						yiqueren(id, function(err,rows){
+						yiqueren(user_id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
@@ -543,7 +828,7 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						yiwancheng(id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
@@ -577,9 +862,9 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						shensuzhong(id, function(err,rows){
+						shensuzhong(user_id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
@@ -611,7 +896,7 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						return reply.view("fanli_tongji",{"results":results,"service_info":service_info});
 					}else {
@@ -633,7 +918,7 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						get_tenant_info(id, function(err,row){
 							if (!err) {
@@ -666,7 +951,7 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						return reply.view("add_project",{"results":results,"service_info":service_info});
 					}else {
@@ -688,12 +973,11 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/make_sure_infos',
 			handler: function(request, reply){
-				var cookie_id = get_cookie_id(request);
-				if (!cookie_id) {
+				var user_id = get_user_id(request);
+				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				var id = get_cookie_id(request);
-				yiqueren(id, function(err,rows){
+				yiqueren(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
 							console.log(rows);
@@ -736,12 +1020,12 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/appeal_project_infos',
 			handler: function(request, reply){
-				var cookie_id = get_cookie_id(request);
-				if (!cookie_id) {
+				var user_id = get_user_id(request);
+				if (!user_id) {
 					return reply.redirect("/login");
 				}
 				var id = get_cookie_id(request);
-				shensuzhong(id, function(err,rows){
+				shensuzhong(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
 							console.log(rows);
@@ -797,7 +1081,7 @@ exports.register = function(server, options, next){
 					price_text : project_infos.price_text
 				};
 				console.log("project_data:"+JSON.stringify(project_data));
-				search_projects_infos(id,user_id,function(err,results){
+				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						save_project(project_data,function(err,content){
 							if (!err) {
@@ -867,7 +1151,11 @@ exports.register = function(server, options, next){
 					return reply.redirect("/login");
 				}
 				var id = cookie_id;
-				project_detail_number(id, function(err,row){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				project_detail_number(user_id, function(err,row){
 					if (!err) {
 						if (row.success) {
 							console.log(row);

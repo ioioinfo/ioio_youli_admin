@@ -1,0 +1,277 @@
+{% extends 'layout.html' %}
+{% block style %}
+	<style media="screen">
+	/*右边表格部分*/
+	.right-table{
+		width: 100%;
+		height: 551px;
+		box-sizing: border-box;
+		overflow: auto;
+	}
+	.right-table .table-head{
+	   width: 100%;
+	   display: flex;
+	}
+	.right-table .table-head li{
+	   flex: 1;
+	   font-size: 16px;
+	   text-align: center;
+	   height: 54px;
+	   line-height: 54px;
+	   border-bottom: 1px solid #f7f2f7;
+	   box-sizing: border-box;
+	}
+	.table-infor{
+	   width: 100%;
+	   display: flex;
+	}
+	.table-infor li{
+		flex: 1;
+		text-align: center;
+		height: 45px;
+		line-height: 45px;
+		font-size: 12px;
+	}
+	.table-infor li input{
+		vertical-align: middle;
+	}
+	.table-infor li img{
+		width: 30px;
+		height: 30px;
+		vertical-align: middle;
+	}
+	.table-infor li .table-submit{
+		border: none;
+		background: #DA6E6B;
+		padding: 2px 4px;
+		border-radius: 2px;
+		color: #fff;
+		cursor: pointer;
+		-webkit-transition:all 1s;
+		-moz-transition:all 1s;
+		-o-transition:all 1s;
+	}
+	.table-infor li .table-submit:hover{
+		-webkit-transform:scale(1.2) rotate(10deg);
+		-moz-transform:scale(1.2) rotate(10deg);
+		-o-transform:scale(1.2) rotate(10deg);
+	}
+	/*编辑*/
+	.bianji{
+		width: 300px;
+		height: 245px;
+		display: none;
+		position: absolute;
+		top: 250px;
+		left: 500px;
+		padding: 0 40px;
+	}
+	.bianji p{
+		overflow: hidden;
+	}
+	.bianji p input{
+		float: right;
+	}
+	/*新建*/
+	.xinjian{
+		width: 300px;
+		height: 245px;
+		display: none;
+		position: absolute;
+		top: 250px;
+		left: 500px;
+		padding: 0 40px;
+	}
+	.xinjian p{
+		overflow: hidden;
+	}
+	.xinjian p input{
+		float: right;
+	}
+
+	</style>
+{% endblock %}
+{% block content %}
+
+	{% if rows.length ==0 %}
+		<img class="images" src="images/img-12.png" alt="">
+	{% else %}
+		<div class="right-table">
+			<ul class="table-head">
+				<li>ID</li>
+				<li>编码</li>
+				<li>简称</li>
+				<li>申请日期</li>
+				<li>保证金</li>
+				<li>行业</li>
+				<li>操作</li>
+			</ul>
+			{% for project_info in rows %}
+				<ul class="table-infor">
+					<li>{{project_info.id}}</li>
+					<li>{{project_info.code}}</li>
+					<li>{{project_info.abbreviation}}</li>
+					<li>{{project_info.shenqingriqi}}</li>
+					<li>{{project_info.baozhengjin}}</li>
+					<li>{{project_info.hangye_name}}</li>
+					<li><input type="submit" data-id="{{project_info.id}}" value="编 辑" class="table-submit"></li>
+				</ul>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+
+
+<div class="right-bottom">
+   <p>
+	  <span class="remove">新 建</span>
+   </p>
+</div>
+
+<!-- 编辑 -->
+<div class="user bianji edit_content">
+
+
+</div>
+<!-- 新建 -->
+<div class="user xinjian">
+	<p>编号：<input type="text" name="" value="" class="add_code"></p>
+	<p>商户名称<input type="text" name="" value="" class="add_name"></p>
+	<p>简称:<input type="text" name="" value="" class="add_ab"></p>
+	<p>申请日期:<input type="text" name="" value="" class="add_data"></p>
+	<p>保证金:<input type="text" name="" value="" class="add_baozhengjin"></p>
+	<p>行业:<input type="text" name="" value="" class="add_hangye"></p>
+	<p class="user-submit"><input type="submit" name="" value="确 定"  class="user-submit1 user-submit2"></p>
+</div>
+
+<div class="toumingceng"> </div>
+<script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="js/jquery.ui.widget.js" type="text/javascript"></script>
+<script src="js/jquery.fileupload.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block script %}
+<script id="edit" type="text/template">
+	<p>编号：<input type="text" name="" value="<%- project.code %>" class="add_code2"></p>
+	<p>商户名称<input type="text" name="" value="<%- project.name %>" class="add_name2"></p>
+	<p>简称:<input type="text" name="" value="<%- project.abbreviation %>" class="add_ab2"></p>
+	<p>保证金:<input type="text" name="" value="<%- project.baozhengjin %>" class="add_baozhengjin2"></p>
+	<p>行业:<input type="text" name="" value="<%- project.hangye_name %>" class="add_hangye2"></p>
+	<p class="user-submit"><input type="submit" name="" value="确 定"  data-id="<%- project.id %>" class="user-submit1 user-submit3"></p>
+</script>
+<script>
+	$(function() {
+		var projects = {{projects|safe}};
+		$(".list-infor6").addClass("hover");
+		//新建
+		var add_tenant = function(data){
+			$.get("/add_tenant",{"data":JSON.stringify(data)},function(data){
+				if (data.success) {
+					alert("创建成功！");
+					location.href = "/tenant_infos";
+				}else {
+					alert("创建失败!");
+				}
+			});
+		};
+
+		//编辑模板
+		var edit_content = function(project){
+			var t = _.template($("#edit").html());
+			$(".edit_content").html(t({project:project}));
+			//确认
+			$(".user-submit3").click(function(){
+				var data = {};
+				var id = $(this).data("id");
+				if (!$(".add_code2").val()) {
+					alert("编码不能为空");
+					return;
+				}else if (!$(".add_name2").val()) {
+					alert("商户名不能为空");
+					return;
+				}else if (!$(".add_baozhengjin2").val()) {
+					alert("保证金不能为空2");
+					return;
+				}else if (!$(".add_hangye2").val()) {
+					alert("行业不能为空");
+					return;
+				}
+				data = {
+					"id" : id,
+					"code" : $(".add_code2").val(),
+					"name" : $(".add_name2").val(),
+					"abbreviation" : $(".add_ab2").val(),
+					"hangye_name" : $(".add_hangye2").val(),
+					"baozhengjin" : $(".add_baozhengjin2").val()
+				};
+				update_tenant(data);
+				$(".bianji").hide();
+				$(".toumingceng").hide();
+			});
+		};
+		//修改
+		var update_tenant = function(data){
+			$.get("/update_tenant",{"data":JSON.stringify(data)},function(data){
+				if (data.success) {
+					alert("修改成功！");
+					location.href = "/tenant_infos";
+				}else {
+					alert("修改失败!"+data.message);
+				}
+			});
+		};
+
+		// 新建
+		$(".remove").click(function(){
+			$(".xinjian").show();
+			$(".toumingceng").show();
+		});
+		$(".user-submit2").click(function(){
+			var data = {};
+			if (!$(".add_code").val()) {
+				alert("编码不能为空");
+				return;
+			}else if (!$(".add_name").val()) {
+				alert("商户名不能为空");
+				return;
+			}else if (!$(".add_ab").val()) {
+				alert("简称不能为空");
+				return;
+			}else if (!$(".add_data").val()) {
+				alert("日期不能为空");
+				return;
+			}else if (!$(".add_baozhengjin").val()) {
+				alert("保证金不能为空");
+				return;
+			}else if (!$(".add_hangye").val()) {
+				alert("行业不能为空");
+				return;
+			}
+			data = {
+				"code" : $(".add_code").val(),
+				"name" : $(".add_name").val(),
+				"abbreviation" : $(".add_ab").val(),
+				"hangye_name" : $(".add_hangye").val(),
+				"shengqiriqi" : $(".add_data").val(),
+				"baozhengjin" : $(".add_baozhengjin").val()
+			};
+			add_tenant(data);
+			$(".xinjian").hide();
+			$(".toumingceng").hide();
+		});
+		// 编辑
+		$(".table-submit").click(function(){
+			var id = $(this).data("id");
+			for (var i = 0; i < projects.length; i++) {
+				if (projects[i].id == id) {
+					edit_content(projects[i]);
+				}
+			}
+			$(".bianji").show();
+			$(".toumingceng").show();
+		});
+
+	});
+</script>
+{% endblock %}

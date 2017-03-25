@@ -1,0 +1,142 @@
+{% extends 'layout.html' %}
+{% block style %}
+	<style media="screen">
+		.right-table{
+			 width: 100%;
+			 overflow: auto;
+		 }
+		 .right-table .table-head{
+			width: 100%;
+			display: flex;
+		 }
+		 .right-table .table-head li{
+			flex: 1;
+			font-size: 16px;
+			text-align: center;
+			height: 54px;
+			line-height: 54px;
+			border-bottom: 1px solid #f7f2f7;
+			box-sizing: border-box;
+		 }
+		 .table-infor{
+			width: 100%;
+			display: flex;
+		 }
+		 .table-infor li{
+			 flex: 1;
+			 text-align: center;
+			 height: 45px;
+			 line-height: 45px;
+			 font-size: 12px;
+		 }
+		 .table-infor li input{
+	         vertical-align: middle;
+	     }
+	     .table-infor li img{
+	         width: 30px;
+	         height: 30px;
+	         vertical-align: middle;
+	     }
+	     .table-infor li .table-submit{
+	         border: none;
+	         background: #74CFD0;
+	         padding: 2px 4px;
+	         border-radius: 2px;
+	         color: #fff;
+	         cursor: pointer;
+	         -webkit-transition:all 1s;
+	         -moz-transition:all 1s;
+	         -o-transition:all 1s;
+	     }
+	     .table-infor li .table-submit:hover{
+	         -webkit-transform:scale(1.2) rotate(10deg);
+	         -moz-transform:scale(1.2) rotate(10deg);
+	         -o-transform:scale(1.2) rotate(10deg);
+	     }
+
+		 .table-infor-wrap{
+			 width: 100%;
+			 height: 500px;
+			 box-sizing: border-box;
+			 overflow-x: hidden;
+			 overflow-y: auto;
+		 }
+	</style>
+{% endblock %}
+{% block content %}
+<div class="right-table">
+    <ul class="table-head">
+        <li>选择</li>
+        <li>微信头像</li>
+        <li>姓名</li>
+        <li>电话</li>
+        <li>提现账户</li>
+        <li>账户余额</li>
+        <li>申请金额</li>
+        <li>状态</li>
+        <li>操作</li>
+    </ul>
+	{% for project_info in rows %}
+	<div class="table-infor-wrap">
+		<ul class="table-infor">
+			<li><input type="checkbox" name="" value=""></li>
+			<li><img src="images/personImg.jpg" alt="" /></li>
+			<li>{{project_info.account_truename}}</li>
+			<li>181***3323</li>
+			<li>{{project_info.card_number}}</li>
+			<li>1000.00</li>
+			<li>{{project_info.amount}}</li>
+			<li>{{cash_map[project_info.state] or "未发放"}}</li>
+			<li><input type="submit" name="" value="发 放" class="table-submit sure" data-id="{{project_info.id}}" data-state="{{project_info.state}}"></li>
+		</ul>
+	</div>
+
+	{% endfor %}
+</div>
+<div class="jine_info" style="display:none;">
+  <div class="weui_mask"></div>
+  <div class="weui_dialog">
+	  <div class="get_jine">
+		  <input class="jine" type="text" value="" placeholder="请输入消费金额"/>
+	  </div>
+	  <div>
+		  <div class="jine_button" id="jine_cancel">取消</div>
+		  <div class="jine_button" id="jine_enter">确定</div>
+	  </div>
+  </div>
+</div>
+{% if rows.length >0 %}
+<div class="right-bottom">
+  <p>
+	<span><a href="#">全选</a></span>
+	<span>/</span>
+	<span><a href="#">取消</a></span>
+	<span class="remove"><a href="#">删除</a></span>
+  </p>
+</div>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script>
+	$(function() {
+
+		$(".fan6").addClass("bottom-ul-style");
+		$(".sure").click(function(){
+			var state = $(this).data("state");
+			if (state == "approve") {
+				alert("已发放过了!");
+				return;
+			}
+			var id = $(this).data("id");
+			$.post("/get_cash",{id:id},function(data){
+				if (data.success) {
+					alert("发放成功！");
+					location.href="/pre_get_cash";
+				}else {
+					alert(data.message);
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}

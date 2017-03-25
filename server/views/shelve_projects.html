@@ -1,4 +1,134 @@
 {% extends 'layout.html' %}
+{% block style %}
+    <style media="screen">
+		.tanchuceng{
+			width: 200px;
+			height: 200px;
+			background: #fff;
+			position: absolute;
+			border-radius: 4px;
+			top: 200px;
+			left: 42.3%;
+			display: none;
+			z-index: 99;
+			border: 4px solid #DAE4EA;
+		}
+		.tanchuceng .tanchuceng_p1{
+			font-size: 14px;
+			color: #666;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+			margin-top: 50px;
+		}
+		.tanchuceng .tanchuceng_p2{
+			font-size: 14px;
+			color: #666;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+			margin-top: 10px;
+		}
+		.tanchuceng .tanchuceng_p2 input{
+			vertical-align: middle;
+			margin-right: 5px;
+		}
+		.tanchuceng .tanchuceng_p3{
+			text-align: center;
+		}
+		.tanchuceng .tanchuceng_p3 input{
+			padding: 3px 15px;
+			border-radius: 4px;
+			margin-top: 30px;
+			background: #4486EB;
+			color: #fff;
+			border: none;
+			margin-left: 10px;
+		}
+		.tanchuceng .tanchuceng_p3 input:last-child{
+			background: #EBEDF2;
+			color: #6C6C6C;
+			margin-right: 10px;
+		}
+		.tanchuceng .tanchuceng_p4{
+			font-size: 12px;
+			text-align: center;
+			margin-top: 4px;
+			color: #666;
+		}
+		.tanchubianji{
+			width: 420px;
+			height: 425px;
+			background: #fff;
+			position: absolute;
+			border-radius: 4px;
+			top: 150px;
+			left: 33.1538%;
+			font-size: 12px;
+			padding-left: 10px;
+			display: none;
+			z-index: 99;
+			border: 4px solid #DAE4EA;
+		}
+		.tanchubianji p{
+			margin-bottom: 20px;
+			color: #666;
+		}
+		.tanchubianji .bianji_p1 textarea{
+			width: 60%;
+			vertical-align: middle;
+			margin-left: 10px;
+			height: 80px;
+			border-radius: 4px;
+		}
+		.tanchubianji .bianji_p1{
+			margin-top: 20px;
+		}
+		.tanchubianji .bianji_p5{
+			margin-top: 40px;
+
+		}
+		.tanchubianji .bianji_p5 input{
+			margin-left: 60px;
+			width: 23%;
+			text-align: center;
+			border-radius: 4px;
+			background: #4486EB;
+			color: #fff;
+			border: none;
+			line-height: 25px;
+		}
+		.tanchubianji .bianji_p5 input:last-child{
+			background: #EBEDF2;
+			color: #6C6C6C;
+		}
+		.tanchubianji input{
+			width: 60%;
+			margin-left: 10px;
+			text-align: center;
+			border-radius: 4px;
+		}
+		.tanchubianji .bianji_p2 input{
+			width: 60%;
+			margin-left: 34px;
+			text-align: center;
+			border-radius: 4px;
+		}
+		.toumingceng{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 100%;
+			width: 100%;
+			background: #808080;
+			opacity: 0.5;
+			z-index: 9;
+			display: none;
+		}
+	</style>
+{% endblock %}
 {% block content %}
 <div class="right-nav">
   <span>选择</span><span>图片</span><span>文字信息</span><span>操作</span>
@@ -17,7 +147,7 @@
 		    <p class="ad-word1"></p>
 		  <div class="ad-word2"><span class="money">{{project_info.price_text}}</span><p class="rebate"><span class="rebate1">预约返利{{project_info.fanli_text}}</span><span class="rebate1">推荐返利{{project_info.tuijian_fanli_text}}</span></p></div>
 		</span>
-		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">下架</p><p><a href="/add_project?project_id={{project_info.id}}">编辑</a></p></div>
+		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">审核</p><p class="edit" data-id="{{project_info.id}}">编辑</p></div>
 	  </div>
 	{% endfor %}
 
@@ -33,21 +163,79 @@
   </p>
 </div>
 {% endif %}
+	<div class="tanchuceng">
+		<p class="tanchuceng_p1">是否确认审核？</p>
+		<p class="tanchuceng_p2"><input type="checkbox" name="" value="" checked>审核后立即发布</p>
+		<p class="tanchuceng_p4">(点击选择发布)</p>
+		<p class="tanchuceng_p3"><input type="submit" name="" value="确 认" class="tanchusubmit tanchusubmit0"><input type="submit" name="" value="取 消" class="tanchusubmit tanchusubmit1"></p>
+	</div>
+	<div class="tanchubianji">
+		<p class="bianji_p1">项目描述<textarea></textarea></p>
+		<p class="bianji_p2">名称<input type="text" name="" value=""> </p>
+		<p class="bianji_p2">电话<input type="text" name="" value=""></p>
+		<p class="bianji_p2">地址<input type="text" name="" value=""></p>
+		<p class="bianji_p2">售价<input type="text" name="" value=""> 元</p>
+		<p class="bianji_p3">预约返利<input type="text" name="" value=""> %</p>
+		<p class="bianji_p4">推荐返利<input type="text" name="" value=""> %</p>
+		<p class="bianji_p5"><input type="submit" name="" value="确 认" class="bianji_p5_submit bianji_p5_submit0"><input type="submit" name="" value="取 消" class="bianji_p5_submit bianji_p5_submit1"></p>
+	</div>
+	<div class="toumingceng"></div>
 </div>
 {% endblock %}
 {% block script %}
 <script>
 	$(function() {
+		var project_id;
 		$(".list-infor4").addClass("hover");
 		$(".shelve").click(function(){
-			var project_id = $(this).data("id");
-			$.post("/down_project",{"project_id":project_id},function(data){
+			project_id = $(this).data("id");
+			$(".tanchuceng").show();
+			$(".toumingceng").show();
+		});
+		//审核确认
+		$(".tanchusubmit0").click(function(){
+			$.post("/vertify",{"project_id":project_id},function(data){
 				if (data.success) {
-					alert("下架成功！");
 					location.href ="/shelve_projects";
 				}else {
 				}
 			});
+			$(".tanchuceng").hide();
+			$(".toumingceng").hide();
+		});
+		//审核取消
+		$(".tanchusubmit1").click(function(){
+            $(".tanchuceng").hide();
+            $(".toumingceng").hide();
+        });
+		//阴影取消
+		$(".toumingceng").click(function(){
+            $(".tanchubianji").hide();
+            $(".toumingceng").hide();
+            $(".tanchuceng").hide();
+        });
+		//编辑
+		$(".edit").click(function(){
+			var id = $(this).data("id");
+			$.get("/find_project_detail",{id:id},function(data){
+				if (data.success) {
+					$(".tanchubianji").show();
+					$(".toumingceng").show();
+				}else {
+					alert(data.message);
+				}
+			});
+
+		});
+		//编辑确认
+		$(".tanchubianji .bianji_p5_submit0").click(function(){
+			$(".tanchubianji").hide();
+			$(".toumingceng").hide();
+		});
+		//编辑取消
+		$(".tanchubianji .bianji_p5_submit1").click(function(){
+			$(".tanchubianji").hide();
+			$(".toumingceng").hide();
 		});
 	});
 </script>
