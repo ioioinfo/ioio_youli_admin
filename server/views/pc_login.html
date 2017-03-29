@@ -134,9 +134,9 @@
 			}
 			$.post("/do_login",{"username":username,"password":password},function(data){
 				if (data.success) {
-					location.href = "/project_list";
+					location.href = "/";
 				}else {
-					alert(data.message);
+					alert("密码错误!");
 				}
 			});
 
