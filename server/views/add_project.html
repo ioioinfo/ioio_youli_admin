@@ -63,7 +63,7 @@
 		  	<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
 		  	<input type="submit" name="" value="预览" class="five">
 		  	<input type="submit" name="" value="保存" class="five" id="save">
-		  	<input type="submit" name="" value="提交" class="five">
+		  	<input type="submit" name="" value="去上架" class="five" id="up">
 	    </div>
 	</script>
 	<script id="add_pictures_infos" type="text/template">
@@ -224,6 +224,9 @@ $(function() {
 		 });
 	};
 	add();
+	$("#up").click(function(){
+		location.href="/unshelve_projects";
+	});
 	$(".list-infor1").addClass("hover");
 	$(".ad-infor").css("display","block");
 	$(".name").focus();
