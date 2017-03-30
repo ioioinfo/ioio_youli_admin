@@ -1,4 +1,49 @@
-{% extends 'layout.html' %}
+       {% extends 'layout.html' %}
+	   {% block style %}
+	   	<style media="screen">
+			#add_pictures{
+				margin-top: 7px;
+			}
+			.add_product_img1{
+				display: inline-block;
+				width: 127px;
+	   		 margin-right: 10px;
+			}
+			.add_product_img1 img{
+				vertical-align: middle;
+				padding-left: 7px;
+	   		 	padding-right: 7px;
+			}
+			.add_product_img1 input{
+				vertical-align: middle;
+				border: none;
+				background: #88B134;
+				color: #fff;
+				padding: 2px 3px;
+				border-radius: 3px;
+				cursor: pointer;
+			}
+			.add_product_img2{
+				display: inline-block;
+				width: 117px;
+			}
+			.add_product_img2 img{
+				vertical-align: middle;
+			}
+			.add_product_img2 input{
+				vertical-align: middle;
+				border: none;
+				background: #88B134;
+				color: #fff;
+				padding: 2px 3px;
+				border-radius: 3px;
+				cursor: pointer;
+			}
+			.ad-infor-next input{
+				margin: 0 5px;
+			}
+	   	</style>
+	   {% endblock %}
 {% block content %}
 <!-- 弹出层填写相信信息 -->
 	<div class="ad-infor" id="add_project">
@@ -70,9 +115,9 @@
 		<% if (images) { %>
 			<% _.forEach(images, function(image,index) { %>
 				<% if (index == 0) { %>
-					<div><img src="images/<%- image %>" width="50px"/><input type='submit' value='主图 删除' class='image_delete' data-id ="<%- index %>"></div>
+					<div class="add_product_img1"><img src="images/<%- image %>" width="50px"/><input type='submit' value='主图 删除' class='image_delete' data-id ="<%- index %>"></div>
 				<% } else { %>
-					<div><img src="images/<%- image %>" width="30px"/><input type='submit' value='删除' class='image_delete' data-id ="<%- index %>"></div>
+					<div class="add_product_img2"><img src="images/<%- image %>" width="30px"/><input type='submit' value='删除' class='image_delete' data-id ="<%- index %>"></div>
 				<% }%>
 			<% }); %>
 		<% } %>
