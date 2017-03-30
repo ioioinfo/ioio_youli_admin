@@ -217,14 +217,7 @@
 		//编辑
 		$(".edit").click(function(){
 			var id = $(this).data("id");
-			$.get("/find_project_detail",{id:id},function(data){
-				if (data.success) {
-					$(".tanchubianji").show();
-					$(".toumingceng").show();
-				}else {
-					alert(data.message);
-				}
-			});
+			location.href = "/edit_project?id="+id;
 
 		});
 		//编辑确认

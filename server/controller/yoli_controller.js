@@ -68,7 +68,12 @@ var down_project = function(data,cb){
 };
 //保存项目
 var save_project = function(data,cb){
-	var url = youli_service + "/shop/project/add";
+	var url = youli_service + "/admin/project/add";
+	do_post_method(data,url,cb);
+};
+//保存更新项目
+var update_project = function(data,cb){
+	var url = youli_service + "/admin/project/update";
 	do_post_method(data,url,cb);
 };
 //保存图片
@@ -76,7 +81,6 @@ var save_pictures = function(data,cb){
 	var url = youli_service + "/shop/project_image/add";
 	do_post_method(data,url,cb);
 }
-//获取当前cookie 商家id 信息
 var get_cookie_id = function(request){
 	var id;
 	if (request.state && request.state.cookie) {
@@ -89,14 +93,14 @@ var get_cookie_id = function(request){
 };
 //获取当前cookie 当前用户user_id 信息
 var get_user_id = function(request){
-	var user_id;
+	var admin_user_id;
 	if (request.state && request.state.cookie) {
 		var cookie = request.state.cookie;
-		if (cookie.user_id) {
-			user_id = cookie.user_id;
+		if (cookie.admin_user_id) {
+			admin_user_id = cookie.admin_user_id;
 		}
 	}
-	return user_id;
+	return admin_user_id;
 };
 //获取商家信息
 var get_tenant_info = function(id,cb){
@@ -114,8 +118,8 @@ var yiqueren = function(user_id,cb){
 	do_get_method(url,cb);
 };
 //获取商家已完成项目
-var yiwancheng = function(id,cb){
-	var url = youli_service + "/shop/orders/yiwancheng?tenant_id=" + id;
+var yiwancheng = function(cb){
+	var url = youli_service + "/admin/orders/yiwancheng";
 	do_get_method(url,cb);
 };
 //获取商家申诉项目
@@ -242,6 +246,104 @@ exports.register = function(server, options, next){
 		});
 	};
 	server.route([
+		//项目更新保存
+		{
+			method: 'POST',
+			path: '/update_project',
+			handler: function(request, reply){
+				var project_infos = JSON.parse(request.payload.project_infos);
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var data = {};
+				if (project_infos.fanli_fangshi == "fanli_bili") {
+					project_infos.fanli_fangshi = "百分比";
+				}else {
+					project_infos.fanli_fangshi = "固定金额";
+				}
+				if (project_infos.tuijian_fanli_fangshi == "tuijian_fanli_bili") {
+					project_infos.tuijian_fanli_fangshi = "百分比";
+				}else {
+					project_infos.tuijian_fanli_fangshi = "固定金额";
+				}
+				var project_data = {
+					project_id : project_infos.id,
+					tenant_id : project_infos.tenant_id,
+                	user_id : user_id,
+                	name : project_infos.name,
+                	fanli_fangshi : project_infos.fanli_fangshi,
+                	fanli_bili : project_infos.fanli_bili,
+                	fanli_jine : project_infos.fanli_jine,
+                	tuijian_fanli_fangshi : project_infos.tuijian_fanli_fangshi,
+                	tuijian_fanli_bili : project_infos.tuijian_fanli_bili,
+                	tuijian_fanli_jine : project_infos.tuijian_fanli_jine,
+                	phone : project_infos.phone,
+                	description : project_infos.description,
+                	xiangmuyoushi : project_infos.xiangmuyoushi,
+                	address : project_infos.address,
+					price_text : project_infos.price_text
+				};
+				console.log("project_data:"+JSON.stringify(project_data));
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						update_project(project_data,function(err,content){
+							if (!err) {
+								for (var i = 0; i < project_infos.images.length; i++) {
+									var img_data = {};
+									img_data = {
+										"project_id" : content.project_id,
+										"image_src" : project_infos.images[i],
+									};
+									if (i==0) {
+										img_data.is_main_image = 1;
+									}else {
+										img_data.is_main_image = 0;
+									}
+									save_pictures(img_data,function(err,result){
+										if (!err) {
+
+										}else {
+
+										}
+									});
+								}
+								return reply({"success":true,"results":results,"service_info":service_info});
+							}else {
+								return reply({"success":false,"message":content.message,"service_info":results.service_info});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//编辑项目
+		{
+			method: 'GET',
+			path: '/edit_project',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var id = request.query.id;
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						find_project_detail(id,function(err,row){
+							if (!err) {
+								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results});
+							}else {
+								return reply({"success":false,"message":result.message});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
 		//查询项目明细
 		{
 			method: 'GET',
@@ -280,10 +382,10 @@ exports.register = function(server, options, next){
 					return reply.redirect("/login");
 				}
 				var is_valid = request.payload.is_valid;
-				var id = request.payload.id;
-				if (!is_valid||!id) {
+				if (!is_valid) {
 					return reply({"success":false,"message":"params wrong"});
 				}
+				var id = request.payload.id;
 				var data = {"id":id,"user_id":user_id,"is_valid":is_valid};
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
@@ -303,7 +405,7 @@ exports.register = function(server, options, next){
 		//管理员项目列表 project_list
 		{
 			method: 'GET',
-			path: '/project_list',
+			path: '/',
 			handler: function(request, reply){
 				var user_id = get_user_id(request);
 				if (!user_id) {
@@ -427,10 +529,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/add_tenant',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -469,10 +567,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/tenant_infos',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -527,10 +621,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/background',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -554,19 +644,15 @@ exports.register = function(server, options, next){
 				data.password = request.payload.password;
 				login_check(data, function(err,row){
 					if (!err) {
-						if (row.success) {
-							var user_id = row.user_id;
-							var cookie = request.state.cookie;
-							if (!cookie) {
-								return reply({"success":false});
-							}
-							cookie.user_id = user_id;
-							return reply({"success":true,"service_info":service_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
-						}else {
-							return reply({"success":false,"service_info":service_info});
+						var admin_user_id = row.user_id;
+						var cookie = request.state.cookie;
+						if (!cookie) {
+							return reply({"success":false});
 						}
+						cookie.admin_user_id = admin_user_id;
+						return reply({"success":true,"service_info":service_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 					}else {
-						return reply({"success":false,"service_info":service_info});
+						return reply({"success":false,"service_info":service_info,"message":row.message});
 					}
 				});
 			}
@@ -580,7 +666,6 @@ exports.register = function(server, options, next){
 				if (!cookie_id) {
 					return reply.redirect("/login");
 				}
-				var id = get_cookie_id(request);
 				get_tenant_info(id, function(err,row){
 					if (!err) {
 						if (row.success) {
@@ -623,10 +708,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/unshelve_projects',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -656,10 +737,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/shelve_projects',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -689,10 +766,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/approve_projects',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -752,10 +825,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/daiqueren',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -786,10 +855,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/yiqueren',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -820,17 +885,14 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/yiwancheng',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
+
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						yiwancheng(id, function(err,rows){
+						yiwancheng(function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
@@ -854,10 +916,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/shensuzhong',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -888,10 +946,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/fanli_tongji',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -910,10 +964,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/tenant',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -943,10 +993,6 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/add_project',
 			handler: function(request, reply){
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -965,7 +1011,9 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/logout',
 			handler: function(request, reply){
-				return reply.redirect("/login").state('cookie', {});
+				var cookie = request.state.cookie;
+				delete cookie.admin_user_id;
+				return reply.redirect("/login").state('cookie',cookie,{});
 			}
 		},
 		//商家已确认
@@ -1000,7 +1048,6 @@ exports.register = function(server, options, next){
 				if (!cookie_id) {
 					return reply.redirect("/login");
 				}
-				var id = get_cookie_id(request);
 				yiwancheng(id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1024,7 +1071,6 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
-				var id = get_cookie_id(request);
 				shensuzhong(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1045,10 +1091,6 @@ exports.register = function(server, options, next){
 			path: '/save_project',
 			handler: function(request, reply){
 				var project_infos = JSON.parse(request.payload.project_infos);
-				var id = get_cookie_id(request);
-				if (!id) {
-					return reply.redirect("/login");
-				}
 				var user_id = get_user_id(request);
 				if (!user_id) {
 					return reply.redirect("/login");
@@ -1065,7 +1107,7 @@ exports.register = function(server, options, next){
 					project_infos.tuijian_fanli_fangshi = "固定金额";
 				}
 				var project_data = {
-					tenant_id : id,
+					tenant_id : project_infos.id,
                 	user_id : user_id,
                 	name : project_infos.name,
                 	fanli_fangshi : project_infos.fanli_fangshi,
@@ -1085,30 +1127,28 @@ exports.register = function(server, options, next){
 					if (!err) {
 						save_project(project_data,function(err,content){
 							if (!err) {
-								if (content.success) {
-									for (var i = 0; i < project_infos.images.length; i++) {
-										var img_data = {};
-										img_data = {
-											"project_id" : content.project_id,
-											"image_src" : project_infos.images[i],
-										};
-										if (i==0) {
-											img_data.is_main_image = 1;
-										}else {
-											img_data.is_main_image = 0;
-										}
-										save_pictures(img_data,function(err,result){
-											if (!err) {
-
-											}else {
-
-											}
-										});
+								for (var i = 0; i < project_infos.images.length; i++) {
+									var img_data = {};
+									img_data = {
+										"project_id" : content.project_id,
+										"image_src" : project_infos.images[i],
+									};
+									if (i==0) {
+										img_data.is_main_image = 1;
+									}else {
+										img_data.is_main_image = 0;
 									}
-								return reply({"success":true,"results":results,"service_info":service_info});
-								}
-							}else {
+									save_pictures(img_data,function(err,result){
+										if (!err) {
 
+										}else {
+
+										}
+									});
+								}
+								return reply({"success":true,"results":results,"service_info":service_info});
+							}else {
+								return reply({"success":false,"message":content.message,"service_info":results.service_info});
 							}
 						});
 					}else {

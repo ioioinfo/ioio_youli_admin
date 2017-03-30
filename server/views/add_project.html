@@ -1,70 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
 <!-- 弹出层填写相信信息 -->
-<div class="ad-infor" id="add_project">
+	<div class="ad-infor" id="add_project">
 
-</div>
-<script id="add_project_infos" type="text/template">
-	<% if (project_infos.name) { %>
-		<div class="ad-infor-next">
-	  		<p class="one">编号(自动)</p><input type="text" name="" value="*001" class="two code" readonly>
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">名称</p><input type="text" name="" value="" class="two name">
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">价格</p><input type="text" name="" value="" class="two price_text">
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">联系电话</p><input type="text" name="" value="" class="two phone">
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">地址</p><input type="text" name="" value="" class="two address">
-	    </div>
-	    <div class="ad-infor-next fanli">
-	  		<p class="one">返利方式</p>
-		  	<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_bili" checked/>百分比 </label>
-		  	<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_jine"/>固定金额 </label>
-	    </div>
-
-	    <div class="ad-infor-next">
-	  		<p class="one">返利比例</p><input type="text" name="" value="" class="two fanli_bili">
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">返利金额</p><input type="text" name="" value="" class="two fanli_jine" readonly>
-	    </div>
-
-	    <div class="ad-infor-next tuijian">
-		  	<p class="one">推荐返利方式</p>
-		  	<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_bili" checked/>百分比 </label>
-		  	<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_jine" />固定金额 </label>
-	    </div>
-
-	    <div class="ad-infor-next">
-	  		<p class="one">推荐返利比例</p><input type="text" name="" value="" class="two tuijian_fanli_bili">
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">推荐返利金额</p><input type="text" name="" value="" class="two tuijian_fanli_jine" readOnly>
-	    </div>
-
-	    <div class="ad-infor-next">
-	    	<p class="one">项目优势</p><textarea class="three item_advantage"></textarea>
-	    </div>
-	    <div class="ad-infor-next">
-	  		<p class="one">项目描述</p><textarea class="three item_describe"></textarea>
-	    </div>
-
-	    <div class="ad-infor-next">
-	  		<p class="one">上传图片</p><input type="file" name="files" value="" class="four image" id="fileupload" multiple>
-	    </div>
-
-	    <div class="ad-infor-next float-right">
-		  	<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
-		  	<input type="submit" name="" value="预览" class="five">
-		  	<input type="submit" name="" value="保存" class="five" id="save">
-		  	<input type="submit" name="" value="提交" class="five">
-	    </div>
-    <% } else { %>
+	</div>
+	<script id="add_project_infos" type="text/template">
 		<div class="ad-infor-next">
 	  		<p class="one">编号(自动)</p><input type="text" name="" value="*001" class="two code" readonly>
 	    </div>
@@ -123,10 +63,9 @@
 		  	<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
 		  	<input type="submit" name="" value="预览" class="five">
 		  	<input type="submit" name="" value="保存" class="five" id="save">
-		  	<input type="submit" name="" value="提交" class="five">
+		  	<input type="submit" name="" value="去上架" class="five" id="up">
 	    </div>
-	<% } %>
-</script>
+	</script>
 	<script id="add_pictures_infos" type="text/template">
 		<% if (images) { %>
 			<% _.forEach(images, function(image,index) { %>
@@ -275,6 +214,7 @@ $(function() {
 			 project_infos.xiangmuyoushi = $(".item_describe").val();
 			 project_infos.main_image_url = images[0];
 			 project_infos.images = images;
+			 project_infos.id = 7;
 			 console.log(JSON.stringify(project_infos));
 			 $.post("/save_project",{project_infos:JSON.stringify(project_infos)},function(data){
 				 if (data.success) {
@@ -284,6 +224,9 @@ $(function() {
 		 });
 	};
 	add();
+	$("#up").click(function(){
+		location.href="/unshelve_projects";
+	});
 	$(".list-infor1").addClass("hover");
 	$(".ad-infor").css("display","block");
 	$(".name").focus();
