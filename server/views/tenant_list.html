@@ -58,37 +58,53 @@
 	}
 	/*编辑*/
 	.bianji{
-		width: 300px;
-		height: 192px;
+		width: 328px;
 		display: none;
 		position: absolute;
 		top: 250px;
 		left: 500px;
-		padding: 0 15px;
 	}
 	.bianji p{
 		overflow: hidden;
+		padding-left: 20px;
 	}
 	.bianji p input{
 		float: right;
 		width: 212px;
 		outline: none;
+		margin-right: 25px;
+
 	}
 	/*新建*/
 	.xinjian{
 		width: 300px;
-		height: 245px;
 		display: none;
 		position: absolute;
 		top: 250px;
 		left: 500px;
-		padding: 0 40px;
+		padding: 0;
+		border: 2px solid #999;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	}
 	.xinjian p{
 		overflow: hidden;
+		width: 85%;
+		padding-left: 20px;
 	}
 	.xinjian p input{
 		float: right;
+		outline: none;
+		width: 165px;
+	}
+	#Title{
+		width: 100%;
+		height: 30px;
+		line-height: 30px ;
+		text-align:center;
+		background: #f4f4f4;
+		clear: #3c3c3c;
+		padding-left: 0;
+		margin-top: 0;
 	}
 
 	</style>
@@ -131,22 +147,22 @@
 </div>
 
 <!-- 编辑 -->
-<div class="user bianji edit_content">
+<div class="user bianji edit_content hbt">
 
 
 </div>
 <!-- 新建 -->
-<div class="user xinjian">
+<div class="user xinjian hbt">
+	<p id="Title">新建商家信息</p>
 	<p>编号：<input type="text" name="" value="" class="add_code"></p>
 	<p>商户名称<input type="text" name="" value="" class="add_name"></p>
 	<p>简称:<input type="text" name="" value="" class="add_ab"></p>
-	<p>申请日期:<input type="text" name="" value="" class="add_data"></p>
+	<p style="display:none">申请日期:<input type="text" name="" value="" class="add_data"></p>
 	<p>保证金:<input type="text" name="" value="" class="add_baozhengjin"></p>
 	<p>行业:<input type="text" name="" value="" class="add_hangye"></p>
 	<p class="user-submit"><input type="submit" name="" value="确 定"  class="user-submit1 user-submit2"></p>
 </div>
 
-<div class="toumingceng"> </div>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/jquery.ui.widget.js" type="text/javascript"></script>
 <script src="js/jquery.fileupload.js" type="text/javascript"></script>
@@ -155,7 +171,8 @@
 
 {% block script %}
 <script id="edit" type="text/template">
-	<p>编号：<input type="text" name="" value="<%- project.code %>" class="add_code2"></p>
+	<p id="Title">新建商家信息</p>
+	<p>编号：<input type="text" name="" value="<%- project.code %>" class="add_code2" readonly="readOnly"></p>
 	<p>商户名称<input type="text" name="" value="<%- project.name %>" class="add_name2"></p>
 	<p>简称:<input type="text" name="" value="<%- project.abbreviation %>" class="add_ab2"></p>
 	<p>保证金:<input type="text" name="" value="<%- project.baozhengjin %>" class="add_baozhengjin2"></p>
@@ -209,7 +226,7 @@
 				};
 				update_tenant(data);
 				$(".bianji").hide();
-				$(".toumingceng").hide();
+				$(".layout_toumingceng").hide();
 			});
 		};
 		//修改
@@ -227,9 +244,10 @@
 		// 新建
 		$(".remove").click(function(){
 			$(".xinjian").show();
-			$(".toumingceng").show();
+			$(".layout_toumingceng").show();
 		});
-		$(".user-submit2").click(function(){
+		$(".user-submit2").click(function(e){
+			e.preventDefault();
 			var data = {};
 			if (!$(".add_code").val()) {
 				alert("编码不能为空");
@@ -239,9 +257,6 @@
 				return;
 			}else if (!$(".add_ab").val()) {
 				alert("简称不能为空");
-				return;
-			}else if (!$(".add_data").val()) {
-				alert("日期不能为空");
 				return;
 			}else if (!$(".add_baozhengjin").val()) {
 				alert("保证金不能为空");
@@ -260,7 +275,7 @@
 			};
 			add_tenant(data);
 			$(".xinjian").hide();
-			$(".toumingceng").hide();
+			$(".layout_toumingceng").hide();
 		});
 		// 编辑
 		$(".table-submit").click(function(){
@@ -271,8 +286,9 @@
 				}
 			}
 			$(".bianji").show();
-			$(".toumingceng").show();
+			$(".layout_toumingceng").show();
 		});
+
 
 	});
 </script>

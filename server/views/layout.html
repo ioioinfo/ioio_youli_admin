@@ -94,7 +94,7 @@
 	  }
 	  .bottom .bottom-ul a .word1 img{
 		width: 20px;
-		height: 24px;
+		height: 20px;
 		display: inline-block;
 		vertical-align: middle;
 	  }
@@ -517,8 +517,7 @@
 	 }
 	 /*用户信息*/
 	.user{
-		width: 200px;
-		height: 185px;
+		width: 240px;
 		background:#fff;
 		position: absolute;
 		top: 196px;
@@ -526,13 +525,15 @@
 		z-index: 999;
 		font-size: 12px;
 		box-sizing: border-box;
-		padding:0 5px;
 		border-radius: 4px;
 		display: none;
+        border: 2px solid #999;
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	}
 	.user p{
 		color: #666;
 		margin: 10px 0;
+        padding-left: 20px;
 	}
 	.user p input{
 		width: 135px;
@@ -559,7 +560,7 @@
 		 cursor: pointer;
 		 border-radius: 4px;
 	}
-	.toumingceng{
+	.layout_toumingceng,.toumingceng{
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -572,7 +573,16 @@
 		z-index: 9;
 		display: none;
 	}
-
+    #Title{
+		width: 100%;
+		height: 30px;
+		line-height: 30px ;
+		text-align:center;
+		background: #f4f4f4;
+		clear: #3c3c3c;
+		padding-left: 0;
+		margin-top: 0;
+	}
     </style>
 	{% block style %}
 	{% endblock %}
@@ -593,42 +603,42 @@
         <div class="bottom">
           <ul class="bottom-ul fan1">
             <a href="/daiqueren">
-              <li class="word1"><img src="images/img-02.png" alt=""></li>
+              <li class="word1"><img src="images/fanlishenqing.png" alt=""></li>
               <li class="word2">返利申请</li>
               <li class="word3">{% if results.subscribes_num_info.daiqueren %}<p class="number"><span>{{results.subscribes_num_info.daiqueren}}</span></p>{% endif %}</li>
             </a>
           </ul>
 		  <ul class="bottom-ul fan2">
 			<a href="/yiqueren">
-			  <li class="word1"><img src="images/img-01.png" alt=""></li>
+			  <li class="word1"><img src="images/querenfanli.png" alt=""></li>
 			  <li class="word2">确认返利</li>
 			  <li class="word3"></li>
 			</a>
 		  </ul>
           <ul class="bottom-ul fan3">
             <a href="/yiwancheng">
-              <li class="word1"><img src="images/img-01.png" alt=""></li>
+              <li class="word1"><img src="images/fanlichenggong.png" alt=""></li>
               <li class="word2">返利成功</li>
               <li class="word3"></li>
             </a>
           </ul>
           <ul class="bottom-ul fan4">
             <a href="/shensuzhong">
-              <li class="word1"><img src="images/img-03.png" alt=""></li>
+              <li class="word1"><img src="images/kehushensu.png" alt=""></li>
               <li class="word2">客户申诉</li>
               <li class="word3">{% if results.subscribes_num_info.shensuzhong %}<p class="number"><span>{{results.subscribes_num_info.shensuzhong }}</span></p>{% endif %}</li>
             </a>
           </ul>
           <ul class="bottom-ul fan5">
             <a href="/fanli_tongji">
-              <li class="word1"><img src="images/img-04.png" alt=""></li>
+              <li class="word1"><img src="images/fanlitongji.png" alt=""></li>
               <li class="word2">返利统计</li>
               <li class="word3"></li>
             </a>
           </ul>
 		  <ul class="bottom-ul fan6">
             <a href="/pre_get_cash">
-              <li class="word1"><img src="images/img-04.png" alt=""></li>
+              <li class="word1"><img src="images/tixianfafang.png" alt=""></li>
               <li class="word2">提现发放</li>
               <li class="word3"></li>
             </a>
@@ -656,15 +666,16 @@
       <span>上海佑佑信息科技有限公司开发</span>
     </div>
 	<!-- 用户信息 -->
-	<div class="user">
+	<div class="user user-header hbt">
+        <p id="Title">商家信息</p>
 		<p>编号：&nbsp;<input type="text" name="" value="{{results.login_user.id}}"></p>
 		<p>昵称：&nbsp;<input type="text" name="" value="{{results.login_user.name}}"></p>
 		<p>帐号:    &nbsp;<input type="text" name="" value="xxxxxxx"></p>
 		<p>密码:    &nbsp;<input type="text" name="" value="xxxxxxxxx"></p>
 		<p>手机号:    &nbsp;<input type="text" name="" value="xxxxxxxxx"></p>
-		<p class="user-submit"><input type="submit" name="" value="注 销" class="logout"><input type="submit" name="" value="确 定"  class="user-submit1"></p>
+		<p class="user-submit"><input type="submit" name="" value="注 销" class="logout"><input type="submit" name="" value="确 定"  class="user-submit1 layout-user-submit1"></p>
 	</div>
-	<div class="toumingceng"> </div>
+	<div class="layout_toumingceng"> </div>
 	<script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 	<script src="js/lodash.min.js" type="text/javascript"></script>
 	<script src="js/jquery.ui.widget.js" type="text/javascript"></script>
@@ -675,24 +686,19 @@
 			$(".logout").click(function(){
 				location.href="/logout";
 			});
-			
+
 			$(".header-left-submit").click(function(){
-				$(".user").show();
-					$(".toumingceng").show();
+				$(".user-header").show();
+				$(".layout_toumingceng").show();
 			});
-			$(".user-submit1").click(function(){
-				$(".user").hide();
-				$(".toumingceng").hide();
-			})
-			$(".table-submit").click(function(){
-				$(".grant").show();
-				$(".toumingceng").show();
+			$(".layout-user-submit1").click(function(){
+				$(".user-header").hide();
+				$(".layout_toumingceng").hide();
 			});
-			$(".toumingceng").click(function(){
-				$(".grant").hide();
-				$(".toumingceng").hide();
-				$(".user").hide();
-			})
+			$(".layout_toumingceng").click(function(){
+				$(".hbt").hide();
+				$(".layout_toumingceng").hide();
+			});
 		});
 	</script>
 	{% block script %}
