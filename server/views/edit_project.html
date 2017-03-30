@@ -59,9 +59,9 @@
 	<div id="add_pictures">
 		{% for image in row.images %}
 			{% if image.is_main_image==1 %}
-				<div><img src="http://211.149.248.241:8000/images/{{image.url}}" width="50px"/><input type='submit' value='主图 删除' class='image_delete'></div>
+				<div><img src="http://211.149.248.241:18102/images/{{image.url}}" width="50px"/><input type='submit' value='主图 删除' class='image_delete'></div>
 			{% else %}
-				<div><img src="http://211.149.248.241:8000/images/{{image.url}}" width="30px"/><input type='submit' value='删除' class='image_delete'></div>
+				<div><img src="http://211.149.248.241:18102/images/{{image.url}}" width="30px"/><input type='submit' value='删除' class='image_delete'></div>
 			{% endif %}
 		{% endfor %}
 	</div>
