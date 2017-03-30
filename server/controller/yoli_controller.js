@@ -212,6 +212,11 @@ var project_list = function(user_id,cb){
 	var url = youli_service + "/admin/all_projects?user_id=" + user_id;
 	do_get_method(url,cb);
 };
+// 更加编号得到商户
+var get_tenant_by_code = function(code,cb){
+	var url = youli_service + "/admin/get_tenant_by_code?code=" + code;
+	do_get_method(url,cb);
+};
 exports.register = function(server, options, next){
 	var search_projects_infos = function(user_id,cb){
 		var ep =  eventproxy.create("project_num_info","subscribes_num_info","login_user",function(project_num_info,subscribes_num_info,login_user){
@@ -246,6 +251,21 @@ exports.register = function(server, options, next){
 		});
 	};
 	server.route([
+		//编号得到商户名称】
+		{
+			method: 'GET',
+			path: '/get_tenant_by_code',
+			handler: function(request, reply){
+				var code = request.query.code;
+				get_tenant_by_code(code,function(err,row){
+					if (!err) {
+						return reply({"success":true,"row":row.row});
+					}else {
+						return reply({"success":false,"message":row.message});
+					}
+				});
+			}
+		},
 		//项目更新保存
 		{
 			method: 'POST',
@@ -415,7 +435,7 @@ exports.register = function(server, options, next){
 					if (!err) {
 						project_list(user_id,function(err,rows){
 							if (!err) {
-								return reply.view("project_list",{"rows":rows.rows,"results":results});
+								return reply.view("project_list",{"rows":rows.rows,"results":results,"state_map":state_map});
 							}else {
 								return reply({"success":false,"message":rows.message,"results":results,"service_info":rows.service_info});
 							}
@@ -540,10 +560,11 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (result.success) {
 							var info = {
-								"username" : data.abbreviation,
-								"name" : "admin",
+								"username" : "admin",
+								"name" : data.name,
 								"password" : 123456,
-								"tenant_id" :result.id
+								"tenant_id" :result.id,
+								"is_system" : 1
 							};
 							create_account(info,function(err,row){
 								if (!err) {
@@ -801,7 +822,7 @@ exports.register = function(server, options, next){
 				}
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						customer_order(get_user_id, function(err,rows){
+						customer_order(user_id, function(err,rows){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
