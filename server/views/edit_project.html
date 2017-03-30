@@ -42,6 +42,22 @@
 	 .ad-infor-next input{
 		 margin: 0 5px;
 	 }
+	 .merchant-number .merchant-number1{
+		 width:20%;
+	 }
+	 .merchant-number .merchant-number2{
+         display: inline-block;
+         width:49%;
+         height: 30px;
+         line-height: 30px;
+         margin-left: 10px;
+         background:#fff;
+         border: none;
+         color: #666;
+         font-size: 12px;
+         text-indent: 10px;
+
+	 }
  </style>
 {% endblock %}
 {% block content %}
@@ -49,6 +65,9 @@
 <div class="ad-infor" id="add_project">
 	<div class="ad-infor-next">
 		<p class="one">编号(自动)</p><input type="text" name="" value="{{row.id}}" class="two code" readonly>
+	</div>
+	<div class="ad-infor-next merchant-number">
+		<p class="one">商户编号</p><input type="text" name="" value="{{row.tenant.code}}" placeholder="请输入商家编号" class="two merchant-number1" ><span class="two merchant-number2" >{{row.tenant.name}}</span>
 	</div>
 	<div class="ad-infor-next">
 		<p class="one">名称</p><input type="text" name="" value="{{row.name}}" class="two name">
@@ -196,7 +215,7 @@ $(function() {
 				 alert("名称必填！")
 				 return;
 			 }
-			 project_infos.tenant_id = tenant_id;
+			 project_infos.tenant_id = {{row.tenant.id}};
 			 project_infos.price_text = $(".price_text").val();
 			 project_infos.address = $(".address").val();
 			 if (project_infos.fanli_fangshi == "fanli_bili") {
@@ -253,5 +272,8 @@ $(function() {
 		location.href ="/add_project";
 	});
 });
+
+
+
 </script>
 {% endblock %}

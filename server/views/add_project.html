@@ -42,6 +42,21 @@
 			.ad-infor-next input{
 				margin: 0 5px;
 			}
+			.merchant-number .merchant-number1{
+				width:20%;
+			}
+			.merchant-number .merchant-number2{
+                display: inline-block;
+				width:49%;
+                height: 30px;
+                line-height: 30px;
+				margin-left: 10px;
+                background:#fff;
+                border: none;
+                color: #666;
+                font-size: 12px;
+                text-indent: 10px;
+			}
 	   	</style>
 	   {% endblock %}
 {% block content %}
@@ -52,6 +67,9 @@
 	<script id="add_project_infos" type="text/template">
 		<div class="ad-infor-next">
 	  		<p class="one">编号(自动)</p><input type="text" name="" value="*001" class="two code" readonly>
+	    </div>
+		<div class="ad-infor-next merchant-number">
+	  		<p class="one">商户编号</p><input type="text" name="" value="" placeholder="请输入商家编号" class="two code merchant-number1" ><span class="two code merchant-number2" ></span>
 	    </div>
 	    <div class="ad-infor-next">
 	  		<p class="one">名称</p><input type="text" name="" value="" class="two name">
@@ -126,6 +144,7 @@
 {% endblock %}
 {% block script %}
 <script>
+var tenant_id;
 $(function() {
 	var images = [];
 	var project_infos = {
@@ -222,6 +241,10 @@ $(function() {
 				 alert("名称必填！")
 				 return;
 			 }
+             if (!tenant_id) {
+                 alert("商户编号必填！")
+				 return;
+             }
 			 project_infos.price_text = $(".price_text").val();
 			 project_infos.address = $(".address").val();
 			 if (project_infos.fanli_fangshi == "fanli_bili") {
@@ -259,7 +282,7 @@ $(function() {
 			 project_infos.xiangmuyoushi = $(".item_describe").val();
 			 project_infos.main_image_url = images[0];
 			 project_infos.images = images;
-			 project_infos.id = 7;
+			 project_infos.id = tenant_id;
 			 console.log(JSON.stringify(project_infos));
 			 $.post("/save_project",{project_infos:JSON.stringify(project_infos)},function(data){
 				 if (data.success) {
@@ -279,5 +302,24 @@ $(function() {
 		location.href ="/add_project";
 	});
 });
+
+// 输入商家编号获取商家信息
+$(function(){
+    $(".merchant-number1").change(function(){
+        var code = $(this).val();
+        $.ajax({
+          url: "/get_tenant_by_code?code="+code,
+          dataType: 'json',
+          type: 'GET',
+          success: function(data) {
+              var row=data.row;
+              $(".merchant-number2").html(row.name);
+              tenant_id = row.id;
+          }.bind(this),
+          error: function(xhr, status, err) {
+          }.bind(this)
+      });
+    })
+})
 </script>
 {% endblock %}
