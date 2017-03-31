@@ -185,29 +185,32 @@ $(function() {
 			main_image_url : null
 		};
 	};
+	//刷新图片模板
+	var fresh_images = function(){
+		var tep = _.template($("#add_pictures_infos").html());
+		$("#add_pictures").html(tep({images:images}));
+		//上传图片删除
+		$(".image_delete").click(function(){
+			var id = $(this).data("id");
+			images.splice(id,1);
+			fresh_images();
+		});
+	}
 	//进入项目创建
 	var add = function(){
 		var t = _.template($("#add_project_infos").html());
 		$("#add_project").html(t({project_infos:project_infos}));
-		var t = _.template($("#add_pictures_infos").html());
-		$("#add_pictures").html(t({images:images}));
+		fresh_images();
 		//上传图片
 		$('#fileupload').fileupload({
 		   url: "/do_upload",
 		   dataType: 'json',
 		   done: function (e, data) {
 			  images.push(data._response.result.src);
-			  var t = _.template($("#add_pictures_infos").html());
-			  $("#add_pictures").html(t({images:images}));
+			  fresh_images();
 			}
 		});
-		//上传图片删除
-		$(".image_delete").click(function(){
-			var id = $(this).data("id");
-			images.splice(id,1);
-			var t = _.template($("#add_pictures_infos").html());
-			$("#add_pictures").html(t({images:images}));
-		});
+
 		//input radio框改变
 		$(".fanli input").change(function(){
 			 $(".fanli_bili").val("");
