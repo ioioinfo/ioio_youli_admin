@@ -121,8 +121,13 @@
     </div>
 	<script>
 	$(function() {
+		var state = 0;
 		$("#tenant_code").focus();
 		$(".submit").click(function(){
+			if (state == 1) {
+				return;
+			}
+			state = 1;
 			var username = $("#username").val();
 			var password = $ ("#password").val();
 			if (!username) {
@@ -133,6 +138,7 @@
 				return;
 			}
 			$.post("/do_login",{"username":username,"password":password},function(data){
+				state = 0;
 				if (data.success) {
 					location.href = "/";
 				}else {
