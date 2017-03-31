@@ -174,9 +174,17 @@
 		</span>
 		<p class="cashback">
 			{% if project_info.recommender_wx_user %}
-			<span>{{project_info.recommender_wx_user.name}}</span><br/>
-			<span>{{project_info.recommender_wx_user.mobile}}</span>
-			<input type="checkbox" name="" value="{{project_info.id}}" class="is_valid"{% if project_info.recommender_valid == 1 %} checked{% endif %} {% if project_info.recommender_valid != -1 %} disabled ="disabled" {% endif %} >
+				<span>{{project_info.recommender_wx_user.name}}</span><br/>
+				<span>{{project_info.recommender_wx_user.mobile}}</span>
+				{% if project_info.recommender_valid == -1 %}
+					状态:
+					<input type="button" name="" value="有效" class="is_valid" data-id="{{project_info.id}}">
+					<input type="button" name="" value="无效" class="is_valid2" data-id="{{project_info.id}}">
+				{% elseif project_info.recommender_valid == 1 %}
+					<span>推荐有效</span>
+				{% else %}
+					<span>推荐无效</span>
+				{% endif %}
 			{% endif %}
 		</p>
 		<div class="operation"></div>
