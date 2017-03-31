@@ -311,17 +311,25 @@ $(function(){
     $(".merchant-number1").change(function(){
         var code = $(this).val();
         $.ajax({
+            
           url: "/get_tenant_by_code?code="+code,
           dataType: 'json',
           type: 'GET',
           success: function(data) {
-              var row=data.row;
-              $(".merchant-number2").html(row.name);
-              tenant_id = row.id;
+              if(data.sussess) {
+                  var row=data.row;
+                  $(".merchant-number2").html(row.name);
+                  tenant_id = row.id;
+              } else {
+                  $(".merchant-number2").html('<span style="color:red;">商家不存在</span>');
+                  tenant_id = null;
+              }
+
           }.bind(this),
           error: function(xhr, status, err) {
           }.bind(this)
       });
+
     })
 })
 </script>
