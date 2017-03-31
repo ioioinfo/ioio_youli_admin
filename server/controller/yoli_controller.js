@@ -27,7 +27,6 @@ var do_get_method = function(url,cb){
 };
 var do_post_method = function(data,url,cb){
 	uu_request.request(url, data, function(err, response, body) {
-		console.log(body);
 		if (!err && response.statusCode === 200) {
 			do_result(false, body, cb);
 		} else {
@@ -80,6 +79,11 @@ var update_project = function(data,cb){
 var save_pictures = function(data,cb){
 	var url = youli_service + "/shop/project_image/add";
 	do_post_method(data,url,cb);
+}
+//保存删除 http://211.149.248.241:17002/shop/project_image/delete_all
+var delete_pictures = function(delete_data,cb){
+	var url = youli_service + "/shop/project_image/delete_all";
+	do_post_method(delete_data,url,cb);
 }
 var get_cookie_id = function(request){
 	var id;
@@ -309,26 +313,36 @@ exports.register = function(server, options, next){
 					if (!err) {
 						update_project(project_data,function(err,content){
 							if (!err) {
-								for (var i = 0; i < project_infos.images.length; i++) {
-									var img_data = {};
-									img_data = {
-										"project_id" : content.project_id,
-										"image_src" : project_infos.images[i],
-									};
-									if (i==0) {
-										img_data.is_main_image = 1;
-									}else {
-										img_data.is_main_image = 0;
-									}
-									save_pictures(img_data,function(err,result){
-										if (!err) {
+								var delete_data = {
+									"project_id" : project_infos.id,
+								};
+								delete_pictures(delete_data,function(err,results){
+									if (!err) {
+										for (var i = 0; i < project_infos.images.length; i++) {
+											var img_data = {};
+											img_data = {
+												"project_id" : project_infos.id,
+												"image_src" : project_infos.images[i],
+											};
+											if (i==0) {
+												img_data.is_main_image = 1;
+											}else {
+												img_data.is_main_image = 0;
+											}
 
-										}else {
+											save_pictures(img_data,function(err,result){
+												if (!err) {
 
+												}else {
+
+												}
+											});
 										}
-									});
-								}
-								return reply({"success":true,"results":results,"service_info":service_info});
+										return reply({"success":true,"results":results,"service_info":service_info});
+									}else {
+										return reply({"success":false,"results":results,"service_info":service_info,"message":results.message});
+									}
+								});
 							}else {
 								return reply({"success":false,"message":content.message,"service_info":results.service_info});
 							}
@@ -353,7 +367,13 @@ exports.register = function(server, options, next){
 					if (!err) {
 						find_project_detail(id,function(err,row){
 							if (!err) {
-								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results});
+								var images = row.project.images;
+								var images_url = [];
+								for (var i = 0; i < images.length; i++) {
+									images_url.push(images[i].url);
+								}
+								console.log("images_url:"+images_url);
+								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":images_url});
 							}else {
 								return reply({"success":false,"message":result.message});
 							}

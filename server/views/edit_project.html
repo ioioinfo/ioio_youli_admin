@@ -121,18 +121,12 @@
 		<p class="one">上传图片</p><input type="file" name="files" value="" class="four image" id="fileupload" multiple>
 	</div>
 	<div id="add_pictures">
-		{% for image in row.images %}
-			{% if image.is_main_image==1 %}
-				<div class="add_product_img1"><img src="http://211.149.248.241:18102/images/{{image.url}}" width="50px"/><input type='submit' value='主图 删除' class='image_delete'></div>
-			{% else %}
-				<div class="add_product_img2"><img src="http://211.149.248.241:18102/images/{{image.url}}" width="30px"/><input type='submit' value='删除' class='image_delete'></div>
-			{% endif %}
-		{% endfor %}
+
 	</div>
 	<div class="ad-infor-next float-right">
 		<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
 		<input type="submit" name="" value="预览" class="five">
-		<input type="submit" name="" value="保存" class="five" id="save" data-id="{{row.id}}" data-tenant="{{row.tenant_id}}">
+		<input type="submit" name="" value="保存" class="five" id="save" data-tenant="{{row.tenant_id}}">
 		<input type="submit" name="" value="返回" class="five" id="back">
 	</div>
 
@@ -141,9 +135,27 @@
 
 {% endblock %}
 {% block script %}
+<script id="add_pictures_infos" type="text/template">
+	<% if (images) { %>
+		<% _.forEach(images, function(image,index) { %>
+			<% if (index == 0) { %>
+				<div class="add_product_img1"><img src="<%- image_host %><%- image %>" width="50px"/><input type='submit' value='主图 删除' class='image_delete' data-id ="<%- index %>"></div>
+			<% } else { %>
+				<div class="add_product_img2"><img src="<%- image_host %><%- image %>" width="30px"/><input type='submit' value='删除' class='image_delete' data-id ="<%- index %>"></div>
+			<% }%>
+		<% }); %>
+	<% } %>
+</script>
+
 <script>
 $(function() {
 	var images = [];
+	var images_url = "{{images_url}}";
+	images_url = images_url.split(",");
+	for (var i = 0; i < images_url.length; i++) {
+		images.push(images_url[i]);
+	}
+	var image_host = "{{image_host}}";
 	var project_infos = {
 		images : [],
 		code : null,
@@ -162,24 +174,35 @@ $(function() {
 		main_image_url : null
 	};
 
-
+	//刷新图片模板
+	var fresh_images = function(){
+		var tep = _.template($("#add_pictures_infos").html());
+		$("#add_pictures").html(tep({images:images,image_host:image_host}));
+		//上传图片删除
+		$(".image_delete").click(function(){
+			var id = $(this).data("id");
+			images.splice(id,1);
+			fresh_images();
+		});
+	}
+	fresh_images();
 		//上传图片
 		$('#fileupload').fileupload({
 		   url: "/do_upload",
 		   dataType: 'json',
 		   done: function (e, data) {
 			  images.push(data._response.result.src);
-			  var t = _.template($("#add_pictures_infos").html());
-			  $("#add_pictures").html(t({images:images}));
+			  fresh_images();
 			}
 		});
 		//上传图片删除
 		$(".image_delete").click(function(){
 			var id = $(this).data("id");
 			images.splice(id,1);
-			var t = _.template($("#add_pictures_infos").html());
-			$("#add_pictures").html(t({images:images}));
+			fresh_images();
 		});
+
+
 		//input radio框改变
 		$(".fanli input").change(function(){
 			 $(".fanli_bili").val("");
@@ -207,7 +230,6 @@ $(function() {
 		 });
 		//保存
 		$("#save").click(function(){
-			var id = $(this).data("id");
 			var tenant_id = $(this).data("tenant");
 			 project_infos.code = $(".code").val();
 			 project_infos.name = $(".name").val();
@@ -247,11 +269,11 @@ $(function() {
 				   return;
 				}
 				project_infos.tuijian_fanli_bili = null;
-			 }
-			 project_infos.id = id;
+			}
+			 project_infos.id = {{row.id}};
 			 project_infos.phone = $(".phone").val();
 			 project_infos.description = $(".item_describe").val();
-			 project_infos.xiangmuyoushi = $(".item_describe").val();
+			 project_infos.xiangmuyoushi = $(".item_advantage").val();
 			 project_infos.main_image_url = images[0];
 			 project_infos.images = images;
 			 console.log(JSON.stringify(project_infos));
