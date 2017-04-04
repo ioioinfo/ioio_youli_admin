@@ -76,11 +76,12 @@
         <li>状态</li>
         <li>操作</li>
     </ul>
-	{% for project_info in rows %}
+
 	<div class="table-infor-wrap">
+		{% for project_info in rows %}
 		<ul class="table-infor">
 			<li><input type="checkbox" name="" value=""></li>
-			<li><img src="images/personImg.jpg" alt="" /></li>
+			<li><img src="{{project_info.headimgurl}}" alt="" /></li>
 			<li>{{project_info.account_truename}}</li>
 			<li>181***3323</li>
 			<li>{{project_info.card_number}}</li>
@@ -89,9 +90,10 @@
 			<li>{{cash_map[project_info.state] or "未发放"}}</li>
 			<li><input type="submit" name="" value="发 放" class="table-submit sure" data-id="{{project_info.id}}" data-state="{{project_info.state}}"></li>
 		</ul>
+		{% endfor %}
 	</div>
 
-	{% endfor %}
+
 </div>
 <div class="jine_info" style="display:none;">
   <div class="weui_mask"></div>
