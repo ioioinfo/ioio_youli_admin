@@ -316,7 +316,7 @@ $(function(){
           dataType: 'json',
           type: 'GET',
           success: function(data) {
-              if(data.sussess) {
+              if(data.success) {
                   var row=data.row;
                   $(".merchant-number2").html(row.name);
                   tenant_id = row.id;
