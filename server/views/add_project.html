@@ -123,8 +123,8 @@
 
 		</div>
 	    <div class="ad-infor-next float-right">
-		  	<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
-		  	<input type="submit" name="" value="预览" class="five">
+		  	<!-- <input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
+		  	<input type="submit" name="" value="预览" class="five"> -->
 		  	<input type="submit" name="" value="保存" class="five" id="save">
 		  	<input type="submit" name="" value="去上架" class="five" id="up">
 	    </div>
@@ -311,7 +311,7 @@ $(function(){
     $(".merchant-number1").change(function(){
         var code = $(this).val();
         $.ajax({
-            
+
           url: "/get_tenant_by_code?code="+code,
           dataType: 'json',
           type: 'GET',

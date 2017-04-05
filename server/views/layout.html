@@ -606,6 +606,13 @@
 
         </div>
         <div class="bottom">
+			<ul class="bottom-ul fan0">
+              <a href="/customer_order">
+                <li class="word1"><img src="images/fanlishenqing.png" alt=""></li>
+                <li class="word2">客户预约</li>
+                <li class="word3">{% if results.subscribes_num_info.yiyuyue %}<p class="number"><span>{{results.subscribes_num_info.yiyuyue}}</span></p>{% endif %}</li>
+              </a>
+            </ul>
           <ul class="bottom-ul fan1">
             <a href="/daiqueren">
               <li class="word1"><img src="images/fanlishenqing.png" alt=""></li>
@@ -655,7 +662,7 @@
           <ul class="list-ul">
 			<li class="list-infor0"><a href="/"><p><span>首页</span></p></a></li>
             <li class="list-infor1"><a href="/add_project"><p><span>创建项目</span></p></a></li>
-            <li class="list-infor2 infor"><a href="/customer_order"><p><span>客户预约</span><span>共{{results.subscribes_num_info.yiyuyue || 0}}条</span></p></a></li>
+            <!-- <li class="list-infor2 infor"><a href="/customer_order"><p><span>客户预约</span><span>共{{results.subscribes_num_info.yiyuyue || 0}}条</span></p></a></li> -->
             <li class="list-infor3 infor"><a href="/unshelve_projects"><p><span>未上架</span><span>共{{results.project_num_info.edit || 0}}条</span></p></a></li>
             <li class="list-infor4 infor"><a href="/shelve_projects"><p><span>审核</span><span>共{{results.project_num_info.shelve || 0}}条</span></p></a></li>
             <li class="list-infor5 infor"><a href="/approve_projects"><p><span>已发布</span><span>共{{results.project_num_info.approve || 0}}条</span></p></a></li>
