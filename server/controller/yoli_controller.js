@@ -255,6 +255,22 @@ exports.register = function(server, options, next){
 		});
 	};
 	server.route([
+		//历史申述
+		{
+			method: 'GET',
+			path: '/shenshu_history',
+			handler: function(request, reply){
+
+			}
+		},
+		//流水记录页面
+		{
+			method: 'GET',
+			path: '/keep_accounts',
+			handler: function(request, reply){
+
+			}
+		},
 		//编号得到商户名称】
 		{
 			method: 'GET',
@@ -876,7 +892,14 @@ exports.register = function(server, options, next){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
+									for (var i = 0; i < rows.rows.length; i++) {
+										var project = rows.rows[i];
+										if (project.recommender_wx_user) {
+											if (project.recommender_valid != 1) {
+												project.recommender_wx_user.mobile = project.recommender_wx_user.mobile.substring(0,project.recommender_wx_user.mobile.length-2)+"**";
+											}
+										}
+									}
 									return reply.view("daiqueren",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});

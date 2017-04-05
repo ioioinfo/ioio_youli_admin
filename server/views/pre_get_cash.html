@@ -84,7 +84,7 @@
 			<li><img src="{{project_info.headimgurl}}" alt="" /></li>
 			<li>{{project_info.account_truename}}</li>
 			<li>181***3323</li>
-			<li>{{project_info.card_number}}</li>
+			<li>{{project_info.card_number or project_info.account_username}}</li>
 			<li>1000.00</li>
 			<li>{{project_info.amount}}</li>
 			<li>{{cash_map[project_info.state] or "未发放"}}</li>
