@@ -150,13 +150,20 @@
 {% block content %}
 <div class="right-table">
 	<ul class="table-head">
+		<li>商户查询<input type="text" value="" class="tenant_id"/><li>
+	</ul>
+	<ul class="table-head">
+		<li>开始日期<input type="date" value="" class="begin_date"/></li>
+		<li>结束日期<input type="date" value="" class="end_date"/></li>
+	</ul>
+	<ul class="table-head">
 		<li>序号</li>
 		<li>项目名称</li>
-		<li>返利人数</li>
+		<li>返利人id</li>
 		<li>返利金额</li>
 	</ul>
 	{% if rows.length ==0 %}
-		
+
 	{% else %}
 		{% for row in rows %}
 			<ul class="table-infor">
@@ -174,6 +181,22 @@
 <script>
 	$(function() {
 		$(".fan5").addClass("bottom-ul-style");
+		$(".tenant_id").keypress(function(e){
+			var key = e.which; //e.which是按键的值
+			if (key != 13) {
+				return;
+			}
+			var tenant_id = $(".tenant_id").val();
+			if (!tenant_id) {
+				return;
+			}
+			var begin_date = $(".begin_date").val();
+			var end_date = $(".end_date").val();
+			if (!begin_date || !end_date) {
+				location.href = "/fanli_tongji?tenant_id="+tenant_id;
+			}
+			location.href = "/fanli_tongji?tenant_id="+tenant_id + "&begin_date=" +begin_date +"&end_date="+end_date;
+		});
 	});
 </script>
 {% endblock %}
