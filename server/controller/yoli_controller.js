@@ -128,7 +128,7 @@ var yiwancheng = function(cb){
 };
 //获取商家申诉项目
 var shensuzhong = function(user_id,cb){
-	var url = youli_service + "/admin/orders/shensuzhong?user_id=" + user_id;
+	var url = youli_service + "/admin/orders/is_shensu?user_id=" + user_id;
 	do_get_method(url,cb);
 };
 //获取项目详细数量
@@ -219,6 +219,11 @@ var project_list = function(user_id,cb){
 // 更加编号得到商户
 var get_tenant_by_code = function(code,cb){
 	var url = youli_service + "/admin/get_tenant_by_code?code=" + code;
+	do_get_method(url,cb);
+};
+//返利统计
+var list_wancheng_subscribes = function(tenant_id,cb){
+	var url = youli_service + "/bi/list_wancheng_subscribes?tenant_id=" + tenant_id;
 	do_get_method(url,cb);
 };
 exports.register = function(server, options, next){
@@ -1014,9 +1019,22 @@ exports.register = function(server, options, next){
 				if (!user_id) {
 					return reply.redirect("/login");
 				}
+				var tenant_id = request.query.tenant_id;
+
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						return reply.view("fanli_tongji",{"results":results,"service_info":service_info});
+						if (!tenant_id) {
+							return reply.view("fanli_tongji",{"rows":[],"service_info":service_info,"results":results});
+						}
+						list_wancheng_subscribes(tenant_id,function(err,rows){
+							if (!err) {
+								console.log("rows:"+JSON.stringify(rows));
+								return reply.view("fanli_tongji",{"rows":rows.rows,"service_info":service_info,"results":results});
+							}else {
+								return reply({"success":false,"message":rows.message,"service_info":results.service_info});
+							}
+						});
+
 					}else {
 						return reply({"success":false,"message":results.message,"service_info":results.service_info});
 					}

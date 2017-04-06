@@ -155,14 +155,18 @@
 		<li>返利人数</li>
 		<li>返利金额</li>
 	</ul>
-	<ul class="table-infor">
-		<li>001</li>
-		<li>新东方</li>
-		<li>1</li>
-		<li>1000</li>
-	</ul>
-
-
+	{% if rows.length ==0 %}
+		
+	{% else %}
+		{% for row in rows %}
+			<ul class="table-infor">
+				<li>{{row.id}}</li>
+				<li>{{row.project_id}}</li>
+				<li>{{row.wx_user_id}}</li>
+				<li>{{row.shiji_fanli_amount}}</li>
+			</ul>
+		{% endfor %}
+	{% endif %}
 </div>
 
 {% endblock %}
