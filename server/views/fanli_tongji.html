@@ -145,12 +145,22 @@
 		z-index: 9;
 		display: none;
 	}
+	.info{
+		display: inline-block;
+		height: 30px;
+		background:#fff;
+		border: none;
+		color: #666;
+		font-size: 12px;
+		text-indent: 10px;
+	}
 	</style>
 {% endblock %}
 {% block content %}
 <div class="right-table">
 	<ul class="table-head">
-		<li>商户查询<input type="text" value="" class="tenant_id"/><li>
+		<li>商户查询<input type="text" value="" class="tenant_id"/><p class="info"></p><li>
+		<li class="search">查询</li>
 	</ul>
 	<ul class="table-head">
 		<li>开始日期<input type="date" value="" class="begin_date"/></li>
@@ -181,13 +191,29 @@
 <script>
 	$(function() {
 		$(".fan5").addClass("bottom-ul-style");
-		$(".tenant_id").keypress(function(e){
-			var key = e.which; //e.which是按键的值
-			if (key != 13) {
+		var state = 0;
+		var tenant_id;
+		$(".tenant_id").change(function(){
+			var code = $(this).val();
+			$.get("/get_tenant_by_code",{code:code},function(data){
+				if (data.success) {
+					var row = data.row;
+					$(".info").html(row.name);
+					tenant_id = row.id;
+				}else {
+					$(".info").html('<span style="color:red;">商家不存在</span>');
+                    tenant_id = null;
+				}
+			});
+		});
+
+		$(".search").click(function(){
+			if (state == 1) {
 				return;
 			}
-			var tenant_id = $(".tenant_id").val();
+			state = 1;
 			if (!tenant_id) {
+				state = 0;
 				return;
 			}
 			var begin_date = $(".begin_date").val();

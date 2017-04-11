@@ -781,18 +781,38 @@ exports.register = function(server, options, next){
 				}
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
+						var ep =  eventproxy.create("projects","tenants","results",function(projects,tenants,results){
+							var tenants_map = {};
+							for (var i = 0; i < projects.length; i++) {
+								for (var j = 0; j < tenants.length; j++) {
+									if (projects[i].tenant_id == tenants[j].id) {
+										tenants_map[projects[i].tenant_id] = tenants[j];
+									}
+								}
+							}
+							return reply.view("unshelve_projects",{"rows":projects,"results":results,"tenants_map":tenants_map,"service_info":service_info});
+						});
+
+						ep.emit("results", results);
+
 						unshelve_projects(user_id, function(err,rows){
 							if (!err) {
-								if (rows.success) {
-									console.log(rows);
-									return reply.view("unshelve_projects",{"rows":rows.rows,"results":results,"service_info":service_info});
-								}else {
-									return reply({"success":false,"message":"search wrong","service_info":service_info});
-								}
+								var projects = rows.rows;
+								ep.emit("projects", projects);
 							}else {
-								return reply({"success":false,"message":"search wrong","service_info":service_info});
+								ep.emit("projects", []);
 							}
 						});
+
+						get_tenant_infos(user_id,function(err,rows){
+							if (!err) {
+								var tenants = rows.rows;
+								ep.emit("tenants", tenants);
+							}else {
+								ep.emit("tenants", []);
+							}
+						});
+
 					}else {
 						return reply({"success":false,"message":results.message,"service_info":results.service_info});
 					}
@@ -810,18 +830,39 @@ exports.register = function(server, options, next){
 				}
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
+
+						var ep =  eventproxy.create("projects","tenants","results",function(projects,tenants,results){
+							var tenants_map = {};
+							for (var i = 0; i < projects.length; i++) {
+								for (var j = 0; j < tenants.length; j++) {
+									if (projects[i].tenant_id == tenants[j].id) {
+										tenants_map[projects[i].tenant_id] = tenants[j];
+									}
+								}
+							}
+							return reply.view("shelve_projects",{"rows":projects,"results":results,"tenants_map":tenants_map,"service_info":service_info});
+						});
+
+						ep.emit("results", results);
+
 						shelve_projects(user_id, function(err,rows){
 							if (!err) {
-								if (rows.success) {
-									console.log(rows);
-									return reply.view("shelve_projects",{"rows":rows.rows,"results":results,"service_info":service_info});
-								}else {
-									return reply({"success":false,"message":"search wrong","service_info":service_info});
-								}
+								var projects = rows.rows;
+								ep.emit("projects", projects);
 							}else {
-								return reply({"success":false,"message":"search wrong","service_info":service_info});
+								ep.emit("projects", []);
 							}
 						});
+
+						get_tenant_infos(user_id,function(err,rows){
+							if (!err) {
+								var tenants = rows.rows;
+								ep.emit("tenants", tenants);
+							}else {
+								ep.emit("tenants", []);
+							}
+						});
+
 					}else {
 						return reply({"success":false,"message":results.message,"service_info":results.service_info});
 					}
@@ -839,18 +880,39 @@ exports.register = function(server, options, next){
 				}
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
-						approve_projects(user_id, function(err,rows){
-							if (!err) {
-								if (rows.success) {
-									console.log(rows);
-									return reply.view("approve_projects",{"rows":rows.rows,"results":results,"service_info":service_info});
-								}else {
-									return reply({"success":false,"message":"search wrong","service_info":service_info});
+
+						var ep =  eventproxy.create("projects","tenants","results",function(projects,tenants,results){
+							var tenants_map = {};
+							for (var i = 0; i < projects.length; i++) {
+								for (var j = 0; j < tenants.length; j++) {
+									if (projects[i].tenant_id == tenants[j].id) {
+										tenants_map[projects[i].tenant_id] = tenants[j];
+									}
 								}
+							}
+							return reply.view("approve_projects",{"rows":projects,"results":results,"tenants_map":tenants_map,"service_info":service_info});
+						});
+
+						ep.emit("results", results);
+
+						shelve_projects(user_id, function(err,rows){
+							if (!err) {
+								var projects = rows.rows;
+								ep.emit("projects", projects);
 							}else {
-								return reply({"success":false,"message":"search wrong","service_info":service_info});
+								ep.emit("projects", []);
 							}
 						});
+
+						get_tenant_infos(user_id,function(err,rows){
+							if (!err) {
+								var tenants = rows.rows;
+								ep.emit("tenants", tenants);
+							}else {
+								ep.emit("tenants", []);
+							}
+						});
+
 					}else {
 						return reply({"success":false,"message":results.message,"service_info":results.service_info});
 					}
@@ -872,7 +934,17 @@ exports.register = function(server, options, next){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
+									for (var i = 0; i < rows.rows.length; i++) {
+										var project = rows.rows[i];
+										if (project.wx_user) {
+											project.wx_user.mobile  = project.wx_user.mobile.substring(0,project.wx_user.mobile.length-2)+"**";
+										}
+										// if (project.recommender_wx_user) {
+										// 	if (project.recommender_valid != 1) {
+										// 		project.recommender_wx_user.mobile = project.recommender_wx_user.mobile.substring(0,project.recommender_wx_user.mobile.length-2)+"**";
+										// 	}
+										// }
+									}
 									return reply.view("customer_order",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -902,14 +974,7 @@ exports.register = function(server, options, next){
 							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									for (var i = 0; i < rows.rows.length; i++) {
-										var project = rows.rows[i];
-										if (project.recommender_wx_user) {
-											if (project.recommender_valid != 1) {
-												project.recommender_wx_user.mobile = project.recommender_wx_user.mobile.substring(0,project.recommender_wx_user.mobile.length-2)+"**";
-											}
-										}
-									}
+
 									return reply.view("daiqueren",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
