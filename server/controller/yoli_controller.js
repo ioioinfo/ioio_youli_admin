@@ -238,8 +238,9 @@ var list_wancheng_subscribes_date = function(tenant_id,begin_date,end_date,cb){
 };
 exports.register = function(server, options, next){
 	var search_projects_infos = function(user_id,cb){
-		var ep =  eventproxy.create("project_num_info","subscribes_num_info","login_user",function(project_num_info,subscribes_num_info,login_user){
-			cb(false,{"project_num_info":project_num_info,"subscribes_num_info":subscribes_num_info,"login_user":login_user});
+		var ep =  eventproxy.create("project_num_info","subscribes_num_info","withdraw_num_info","login_user"
+		    ,function(project_num_info,subscribes_num_info,withdraw_num_info,login_user){
+			cb(false,{"project_num_info":project_num_info,"subscribes_num_info":subscribes_num_info,"withdraw_num_info":withdraw_num_info,"login_user":login_user});
 		});
 		get_login_user(user_id,function(err,row){
 			if (!err) {
@@ -260,9 +261,11 @@ exports.register = function(server, options, next){
 					var subscribes_num_info = row.subscribes;
 					ep.emit("project_num_info", project_num_info);
 					ep.emit("subscribes_num_info", subscribes_num_info);
+					ep.emit("withdraw_num_info", row.withdraw);
 				}else {
 					ep.emit("project_num_info", {});
 					ep.emit("subscribes_num_info", {});
+					ep.emit("withdraw_num_info", {});
 				}
 			}else {
 				cb(true,{"message":"search num wrong","service_info":service_info});

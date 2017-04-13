@@ -610,7 +610,7 @@
               <a href="/customer_order">
                 <li class="word1"><img src="images/kehuyuyue.png" alt=""></li>
                 <li class="word2">客户预约</li>
-                <li class="word3">{% if results.subscribes_num_info.yiyuyue %}<p class="number"><span>{{results.subscribes_num_info.yiyuyue}}</span></p>{% endif %}</li>
+                <li class="word3"></li>
               </a>
             </ul>
           <ul class="bottom-ul fan1">
@@ -660,7 +660,7 @@
             <a href="/pre_get_cash">
               <li class="word1"><img src="images/tixianfafang.png" alt=""></li>
               <li class="word2">提现发放</li>
-              <li class="word3"></li>
+              <li class="word3">{% if results.withdraw_num_info %}<p class="number"><span>{{results.withdraw_num_info.cnt }}</span></p>{% endif %}</li>
             </a>
           </ul>
         </div>
