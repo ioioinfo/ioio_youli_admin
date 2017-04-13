@@ -1,7 +1,39 @@
 {% extends 'layout.html' %}
+{% block style %}
+	<style media="screen">
+        .top .right-nav span:nth-child(5n+3){
+            width: 48.901%;
+        }
+        .top .right-nav span:nth-child(5n+4){
+            width: 18.315%;
+        }
+        .top .right-nav span:last-child{
+            width: 16.17216%;
+        }
+        .top .right-nav-height .ad{
+            width: 49.6744186%;
+        }
+        .top .right-nav-height .operation{
+            width: 15.72093%;
+        }
+        .top .right-nav-height .ad .ad-word1{
+            margin-left: 0;
+            width: 100%;
+            padding-left: 100px;
+        }
+        .top .right-nav-height .product_infor{
+            width: 200px;
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 12px;
+            text-align: center;
+        }
+	</style>
+{% endblock %}
+
 {% block content %}
 <div class="right-nav">
-  <span>选择</span><span>图片</span><span>文字信息</span><span>操作</span>
+  <span>选择</span><span>图片</span><span>文字信息</span><span>商家信息</span><span>操作</span>
 </div>
 <div class="warp">
 {% if rows.length ==0 %}
@@ -17,7 +49,9 @@
 		    <p class="ad-word1">{{tenants_map[project_info.tenant_id].name}}</p>
 		  <div class="ad-word2"><span class="money">{{project_info.price_text}}</span><p class="rebate"><span class="rebate1">预约返利{{project_info.fanli_text}}</span><span class="rebate1">推荐返利{{project_info.tuijian_fanli_text}}</span></p></div>
 		</span>
-
+        <div class="product_infor">
+            内容待定
+        </div>
 		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">上架</p></div>
 	  </div>
 	{% endfor %}

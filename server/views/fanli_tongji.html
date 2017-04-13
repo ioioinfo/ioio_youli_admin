@@ -2,21 +2,23 @@
 {% block style %}
 	<style media="screen">
 	/*右边表格部分*/
+	.right{
+		background: #eee;
+	}
 	.right-table{
 		width: 80%;
 		height: 551px;
 		box-sizing: border-box;
 		overflow: auto;
-		margin: 0 auto;
-		border-left: 1px solid #f7f2f7;
-		border-right: 1px solid #f7f2f7;
+		margin: 10px auto 0;
+		background: #fff;
 	}
 	.right-table .table-head{
 	   width: 100%;
 	   display: flex;
 	}
 	.right-table .table-head li{
-	   flex: 1;
+	   width: 25%;
 	   font-size: 16px;
 	   text-align: center;
 	   height: 54px;
@@ -27,9 +29,10 @@
 	.table-infor{
 	   width: 100%;
 	   display: flex;
+	   border-bottom: 1px solid #fff;
 	}
 	.table-infor li{
-		flex: 1;
+		width: 25%;
 		text-align: center;
 		height: 45px;
 		line-height: 45px;
@@ -84,6 +87,9 @@
 	  display: inline-block;
 	  margin-right: 5px;
 	}
+	.right .list{
+		background: #fff;
+	}
 	.right .right-bottom p .remove a{
 	  color: #ff4081;
 	}
@@ -91,47 +97,6 @@
 	  cursor: pointer;
 	  margin-left: 15px;
 	}
-	/*用户信息*/
-	/*.user{
-		width: 200px;
-		height: 190px;
-		background:#fff;
-		position: absolute;
-		top: 200px;
-		left: 500px;
-		z-index: 999;
-		font-size: 12px;
-		box-sizing: border-box;
-		padding:0 5px;
-		border-radius: 4px;
-		display: none;
-	}
-	.user p{
-		color: #666;
-		margin: 10px 0;
-	}
-	.user p input{
-		width: 135px;
-	}
-
-	.user .user-submit{
-		text-align: right;
-		margin: 10px auto;
-
-	}
-	.user .user-submit1{
-		margin-left: 20px;
-		border: none;
-		background: #55ACD7;
-		color: #fff;
-		padding: 2px 4px;
-		border-radius: 2px;
-
-	}
-	.user .user-submit input{
-		 width: 50px;
-		 cursor: pointer;
-	}*/
 	.toumingceng{
 		position: absolute;
 		top: 0;
@@ -154,17 +119,59 @@
 		font-size: 12px;
 		text-indent: 10px;
 	}
+
+	/*新样式*/
+	.right-table .table-head .merchant_media{
+		font-size: 14px;
+		color: #808080;
+		text-align: left;
+		text-indent: 10px;
+		width: 260px;
+	}
+	.right-table .table-head .merchant_media .info{
+		position: absolute;
+		top: 16px;
+		left: 333px;
+		height: 23px;
+		line-height: 23px;
+	}
+	.right-table .table-head .merchant_media input{
+		margin-left: 10px;
+		padding: 4px 6px ;
+		border-radius: 3px;
+		outline: none;
+		border: none;
+		width: 55.33076923%;
+		background: #eee;
+	}
+	.merchant_media_ul{
+		position: relative;
+
+	}
+	.right-table .table-head .search{
+		width: 40px;
+		font-size: 12px;
+		padding: 4px 6px ;
+		border-radius: 3px;
+		background: #14B08D;
+		height: auto;
+		line-height: 14px;
+		position: absolute;
+		top: 16px;
+		left: 274px;
+		color: #fff;
+		}
 	</style>
 {% endblock %}
 {% block content %}
 <div class="right-table">
-	<ul class="table-head">
-		<li>商户查询<input type="text" value="" class="tenant_id"/><p class="info"></p><li>
+	<ul class="table-head merchant_media_ul">
+		<li class="merchant_media">商户查询<input type="text" value="" class="tenant_id"/><p class="info"></p><li>
 		<li class="search">查询</li>
 	</ul>
 	<ul class="table-head">
-		<li>开始日期<input type="date" value="" class="begin_date"/></li>
-		<li>结束日期<input type="date" value="" class="end_date"/></li>
+		<li class="merchant_media">开始日期<input type="date" value="" class="begin_date"/></li>
+		<li class="merchant_media">结束日期<input type="date" value="" class="end_date"/></li>
 	</ul>
 	<ul class="table-head">
 		<li>序号</li>
