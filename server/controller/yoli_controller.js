@@ -211,6 +211,11 @@ var get_cash = function(data,cb){
 	var url = youli_service + "/admin/withdraw/confirm"
 	do_post_method(data,url,cb);
 }
+//停止商户
+var change_tenant_active = function(data,cb){
+	var url = youli_service + "/admin/change_tenant_active"
+	do_post_method(data,url,cb);
+}
 // 审核
 var vertify = function(data,cb){
 	var url = youli_service + "/admin/project/approve"
@@ -273,6 +278,27 @@ exports.register = function(server, options, next){
 		});
 	};
 	server.route([
+		//停止商户
+		{
+			method: 'POST',
+			path: '/change_tenant_active',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var id = request.payload.id;
+				var is_active = request.payload.is_active;
+				var data = {"user_id":user_id,"id":id,"is_active":is_active};
+				change_tenant_active(data,function(err,row){
+					if (!err) {
+						return reply({"success":true});
+					}else {
+						return reply({"success":false,"message":row.message});
+					}
+				});
+			}
+		},
 		//历史申述
 		{
 			method: 'GET',

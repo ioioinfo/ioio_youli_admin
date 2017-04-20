@@ -132,7 +132,14 @@
 					<li>{{project_info.shenqingriqi}}</li>
 					<li>{{project_info.baozhengjin}}</li>
 					<li>{{project_info.hangye_name}}</li>
-					<li><input type="submit" data-id="{{project_info.id}}" value="编 辑" class="table-submit"></li>
+					<li>
+						<input type="submit" data-id="{{project_info.id}}" value="编 辑" class="table-submit">
+						{% if project_info.is_active==1 %}
+							<input type="submit" data-id="{{project_info.id}}" value="停 用" class="stop">
+						{% else %}
+							<input type="submit" data-id="{{project_info.id}}" value="启 用" class="restart">
+						{% endif %}
+					</li>
 				</ul>
 			{% endfor %}
 		</div>
@@ -288,7 +295,28 @@
 			$(".bianji").show();
 			$(".layout_toumingceng").show();
 		});
+		$(".stop").click(function(){
+			var id = $(this).data("id");
+			$.post("/change_tenant_active",{id:id,is_active:0},function(data){
+				if (data.success) {
+					alert("停用成功！");
+					location.reload();
+				}else {
 
+				}
+			})
+		});
+		$(".restart").click(function(){
+			var id = $(this).data("id");
+			$.post("/change_tenant_active",{id:id,is_active:1},function(data){
+				if (data.success) {
+					alert("启用成功！");
+					location.reload();
+				}else {
+
+				}
+			})
+		});
 
 	});
 </script>
