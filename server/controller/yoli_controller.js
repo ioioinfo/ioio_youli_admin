@@ -929,7 +929,7 @@ exports.register = function(server, options, next){
 
 						ep.emit("results", results);
 
-						shelve_projects(user_id, function(err,rows){
+						approve_projects(user_id, function(err,rows){
 							if (!err) {
 								var projects = rows.rows;
 								ep.emit("projects", projects);
