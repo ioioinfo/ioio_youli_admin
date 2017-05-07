@@ -15,6 +15,19 @@ var cash_map = {
 	"approve" : "已发放"
 };
 
+var banks = {
+        "icbc":{"name":"中国工商银行"}
+        ,"alipay":{"name":"支付宝"}
+        ,"abc":{"name":"中国农业银行"}
+        ,"bc":{"name":"中国银行"}
+        ,"bocom":{"name":"交通银行"}
+        ,"cbc":{"name":"中国建设银行"}
+        ,"cib":{"name":"兴业银行"}
+        ,"cmbc":{"name":"招商银行"}
+        ,"cmsb":{"name":"民生银行"}
+        ,"hsbc":{"name":"汇丰银行"}
+};
+
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
@@ -588,7 +601,11 @@ exports.register = function(server, options, next){
 					if (!err) {
 						pre_get_cash(user_id,function(err,rows){
 							if (!err) {
-								return reply.view("pre_get_cash",{"rows":rows.rows,"results":results,"service_info":service_info,"cash_map":cash_map});
+								var data = rows.rows;
+								for (var i = 0; i < data.length; i++) {
+									data[i].card_type = banks[data[i].card_type]["name"];
+								}
+								return reply.view("pre_get_cash",{"rows":data,"results":results,"service_info":service_info,"cash_map":cash_map});
 							}else {
 								return reply({"success":false,"message":result.message,"service_info":results.service_info});
 							}

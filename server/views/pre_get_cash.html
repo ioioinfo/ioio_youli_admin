@@ -66,29 +66,31 @@
 {% block content %}
 <div class="right-table">
     <ul class="table-head">
-        <li>选择</li>
-        <li>微信头像</li>
+
         <li>姓名</li>
         <li>电话</li>
+		<li>银行</li>
         <li>提现账户</li>
-        <li>账户余额</li>
         <li>申请金额</li>
         <li>状态</li>
+		<li>发放时间</li>
+		<li>发放人</li>
         <li>操作</li>
     </ul>
 
 	<div class="table-infor-wrap">
 		{% for project_info in rows %}
 		<ul class="table-infor">
-			<li><input type="checkbox" name="" value=""></li>
-			<li><img src="{{project_info.headimgurl}}" alt="" /></li>
+
 			<li>{{project_info.account_truename}}</li>
-			<li>181***3323</li>
+			<li>{{project_info.mobile}}</li>
+			<li>{{project_info.card_type}}</li>
 			<li>{{project_info.card_number or project_info.account_username}}</li>
-			<li>1000.00</li>
 			<li>{{project_info.amount}}</li>
 			<li>{{cash_map[project_info.state] or "未发放"}}</li>
-			<li><input type="submit" name="" value="发 放" class="table-submit sure" data-id="{{project_info.id}}" data-state="{{project_info.state}}"></li>
+			<li>{{project_info.approved_at_text}}</li>
+			<li>{{project_info.approved_by_name}}</li>
+			<li>{% if project_info.state=="approve" %} {% else %}<input type="submit" name="" value="发 放" class="table-submit sure" data-id="{{project_info.id}}" data-state="{{project_info.state}}">{% endif %}</li>
 		</ul>
 		{% endfor %}
 	</div>
@@ -108,14 +110,14 @@
   </div>
 </div>
 {% if rows.length >0 %}
-<div class="right-bottom">
+<!-- <div class="right-bottom">
   <p>
 	<span><a href="#">全选</a></span>
 	<span>/</span>
 	<span><a href="#">取消</a></span>
 	<span class="remove"><a href="#">删除</a></span>
   </p>
-</div>
+</div> -->
 {% endif %}
 {% endblock %}
 {% block script %}

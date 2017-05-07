@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block style %}
 	<style media="screen">
-	
+
 		.right-nav-height .shensu{
 			font-size:12px;
 			color:#000;
@@ -36,7 +36,7 @@
 {% endblock %}
 {% block content %}
 <div class="right-nav">
-  <span>选择</span><span>图片</span><span>文字信息</span><span>操作</span>
+  <span>选择</span><span>图片</span><span>文字信息</span><span>处理进度</span>
 </div>
 <div class="warp">
 {% if rows.length ==0 %}
@@ -66,7 +66,7 @@
 			</div>
 		</span>
 		<div class="operation"></div>
-
+			{{project_info.state}}
 		</p>
 	  </div>
 	{% endfor %}
