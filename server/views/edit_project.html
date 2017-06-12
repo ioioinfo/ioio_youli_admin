@@ -283,7 +283,6 @@ $(function() {
 			 project_infos.xiangmuyoushi = $(".item_advantage").val();
 			 project_infos.main_image_url = images[0];
 			 project_infos.images = images;
-			 console.log(JSON.stringify(project_infos));
 			 $.post("/update_project",{project_infos:JSON.stringify(project_infos)},function(data){
 				 if (data.success) {
 				 	alert("保存成功！");
