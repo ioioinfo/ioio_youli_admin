@@ -263,32 +263,32 @@ $(function() {
 			 project_infos.address = $(".address").val();
 			 if (project_infos.fanli_fangshi == "fanli_bili") {
 				 project_infos.fanli_bili = $(".fanli_bili").val();
-				 if (!project_infos.fanli_bili) {
-				 	alert("返利比例必填！")
-					return;
-				 }
+				//  if (!project_infos.fanli_bili) {
+				//  	alert("返利比例必填！")
+				// 	return;
+				//  }
 				 project_infos.fanli_jine = null;
 			 }else {
 				 project_infos.fanli_jine = $(".fanli_jine").val();
-				 if (!project_infos.fanli_jine) {
-				 	alert("返利金额必填！")
-					return;
-				 }
+				//  if (!project_infos.fanli_jine) {
+				//  	alert("返利金额必填！")
+				// 	return;
+				//  }
 				 project_infos.fanli_bili = null;
 			 }
 			 if (project_infos.tuijian_fanli_fangshi == "tuijian_fanli_bili") {
 				 project_infos.tuijian_fanli_bili = $(".tuijian_fanli_bili").val();
-				 if (!project_infos.tuijian_fanli_bili) {
-				 	alert("推荐返利比例必填！")
-					return;
-				 }
+				//  if (!project_infos.tuijian_fanli_bili) {
+				//  	alert("推荐返利比例必填！")
+				// 	return;
+				//  }
 				 project_infos.tuijian_fanli_jine = null;
 			 }else {
 				 project_infos.tuijian_fanli_jine = $(".tuijian_fanli_jine").val();
-				 if (!project_infos.tuijian_fanli_jine) {
-				   alert("推荐返利金额必填！")
-				   return;
-				}
+				//  if (!project_infos.tuijian_fanli_jine) {
+				//    alert("推荐返利金额必填！")
+				//    return;
+				// }
 				project_infos.tuijian_fanli_bili = null;
 			 }
 			 project_infos.phone = $(".phone").val();
