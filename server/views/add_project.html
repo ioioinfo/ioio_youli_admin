@@ -6,9 +6,10 @@
 				margin-top: 7px;
 			}
 			.add_product_img1{
-				display: inline-block;
-				width: 127px;
-	   		 margin-right: 10px;
+                display: inline-block;
+                width: 127px;
+                margin-right: 10px;
+                text-align: center;
 			}
 			.add_product_img1 img{
 				vertical-align: middle;
@@ -23,6 +24,7 @@
 				padding: 2px 3px;
 				border-radius: 3px;
 				cursor: pointer;
+                margin-top: 4px;
 			}
 			.add_product_img2{
 				display: inline-block;
@@ -39,6 +41,7 @@
 				padding: 2px 3px;
 				border-radius: 3px;
 				cursor: pointer;
+                margin-left: 5px;
 			}
 			.ad-infor-next input{
 				margin: 0 5px;
@@ -62,7 +65,10 @@
                 color: #000;
             }
             .edui-container{
-                margin-left: 148px;
+                margin-left: 173px;
+            }
+            .ad-infor-next-left .three{
+                margin-left: 50px;
             }
 	   	</style>
 	   {% endblock %}
@@ -100,7 +106,7 @@
 	  		<p class="one">返利比例(%)</p><input type="text" name="" value="" class="two fanli_bili">
 	    </div>
 	    <div class="ad-infor-next">
-	  		<p class="one">返利金额</p><input type="text" name="" value="" class="two fanli_jine" readonly>
+	  		<p class="one">返利金额(元)</p><input type="text" name="" value="" class="two fanli_jine" readonly>
 	    </div>
 
 	    <div class="ad-infor-next tuijian">
@@ -113,10 +119,10 @@
 	  		<p class="one">推荐返利比例</p><input type="text" name="" value="" class="two tuijian_fanli_bili">
 	    </div>
 	    <div class="ad-infor-next">
-	  		<p class="one">推荐返利金额</p><input type="text" name="" value="" class="two tuijian_fanli_jine" readOnly>
+	  		<p class="one">推荐返利金额(元)</p><input type="text" name="" value="" class="two tuijian_fanli_jine" readOnly>
 	    </div>
 
-	    <div class="ad-infor-next">
+	    <div class="ad-infor-next ad-infor-next-left">
 	    	<p class="one">项目优势</p><textarea class="three item_advantage"></textarea>
 	    </div>
 	    <div class="ad-infor-next">
