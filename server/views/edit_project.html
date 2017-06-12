@@ -80,7 +80,7 @@
 		<p class="one">联系电话</p><input type="text" name="" value="{{row.phone}}" class="two phone">
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">地址</p><input type="text" name="" value="" class="two address">
+		<p class="one">地址</p><input type="text" name="" value="{{row.address}}" class="two address">
 	</div>
 	<div class="ad-infor-next fanli">
 		<p class="one">返利方式</p>
@@ -246,6 +246,7 @@ $(function() {
 			 project_infos.tenant_id = {{row.tenant.id}};
 			 project_infos.price_text = $(".price_text").val();
 			 project_infos.address = $(".address").val();
+             console.log("address:"+project_infos.address);
 			 if (project_infos.fanli_fangshi == "fanli_bili") {
 				 project_infos.fanli_bili = $(".fanli_bili").val();
 				 if (!project_infos.fanli_bili) {
@@ -278,7 +279,7 @@ $(function() {
 			}
 			 project_infos.id = {{row.id}};
 			 project_infos.phone = $(".phone").val();
-			 project_infos.description = $(".item_describe").val();
+			 project_infos.description = ue.getContent();
 			 project_infos.xiangmuyoushi = $(".item_advantage").val();
 			 project_infos.main_image_url = images[0];
 			 project_infos.images = images;
