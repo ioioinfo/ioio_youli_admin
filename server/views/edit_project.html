@@ -68,6 +68,9 @@
      .ad-infor-next-left .three{
          margin-left: 50px;
      }
+     p{
+         color: #666;
+     }
  </style>
 {% endblock %}
 {% block content %}
@@ -295,6 +298,7 @@ $(function() {
 			 $.post("/update_project",{project_infos:JSON.stringify(project_infos)},function(data){
 				 if (data.success) {
 				 	alert("保存成功！");
+                    location.href = "/shelve_projects";
 				 }
 			 })
 		 });

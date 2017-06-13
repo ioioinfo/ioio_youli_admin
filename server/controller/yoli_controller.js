@@ -1388,7 +1388,7 @@ exports.register = function(server, options, next){
 										}
 									});
 								}
-								return reply({"success":true,"results":results,"service_info":service_info});
+								return reply({"success":true,"results":results,"code":content.code,"service_info":service_info});
 							}else {
 								return reply({"success":false,"message":content.message,"service_info":results.service_info});
 							}
