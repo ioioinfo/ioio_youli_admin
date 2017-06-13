@@ -71,6 +71,16 @@
      p{
          color: #666;
      }
+     #back{
+        display: inline-block;
+        color: #000;
+        font-size: 14px;
+        text-align: center;
+        background: #ededed;
+     }
+     #float-right{
+         margin-right: 34px;
+     }
  </style>
 {% endblock %}
 {% block content %}
@@ -80,31 +90,31 @@
 		<p class="one">编号(自动)</p><input type="text" name="" value="{{row.id}}" class="two code" readonly>
 	</div>
 	<div class="ad-infor-next merchant-number">
-		<p class="one">商户编号</p><input type="text" name="" value="{{row.tenant.code}}" placeholder="请输入商家编号" class="two merchant-number1" ><span class="two merchant-number2" >{{row.tenant.name}}</span>
+		<p class="one">商户编号</p><input type="text" name="" value="{{row.tenant.code}}" placeholder="请输入商家编号" class="two merchant-number1" readonly ><span class="two merchant-number2" >{{row.tenant.name}}</span>
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">名称</p><input type="text" name="" value="{{row.name}}" class="two name">
+		<p class="one">名称</p><input type="text" name="" value="{{row.name}}" class="two name" readonly>
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">价格</p><input type="text" name="" value="{{row.price_text}}" class="two price_text">
+		<p class="one">价格</p><input type="text" name="" value="{{row.price_text}}" class="two price_text" readonly>
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">联系电话</p><input type="text" name="" value="{{row.phone}}" class="two phone">
+		<p class="one">联系电话</p><input type="text" name="" value="{{row.phone}}" class="two phone" readonly>
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">地址</p><input type="text" name="" value="{{row.address}}" class="two address">
+		<p class="one">地址</p><input type="text" name="" value="{{row.address}}" class="two address" readonly>
 	</div>
 	<div class="ad-infor-next fanli">
 		<p class="one">返利方式</p>
 
-			<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_bili" {% if row.fanli_bili %}checked{% endif %}/>百分比 </label>
+			<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_bili" {% if row.fanli_bili %}checked{% endif %} readonly />百分比 </label>
 
-			<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_jine" {% if row.fanli_jine %}checked{% endif %} />固定金额 </label>
+			<label style="font-size:14px;margin-left: 50px;"><input name="fan_way" type="radio" value="fanli_jine" {% if row.fanli_jine %}checked{% endif %} readonly />固定金额 </label>
 
 	</div>
 
 	<div class="ad-infor-next">
-		<p class="one">返利比例(%)</p><input type="text" name="" value="{{row.fanli_bili}}" class="two fanli_bili">
+		<p class="one">返利比例(%)</p><input type="text" name="" value="{{row.fanli_bili}}" class="two fanli_bili" readonly>
 	</div>
 	<div class="ad-infor-next">
 		<p class="one">返利金额(元)</p><input type="text" name="" value="{{row.fanli_jine}}" class="two fanli_jine" readonly>
@@ -112,35 +122,32 @@
 
 	<div class="ad-infor-next tuijian">
 		<p class="one">推荐返利方式</p>
-		<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_bili" {% if row.tuijian_fanli_bili %}checked{% endif %}/>百分比 </label>
-		<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_jine" {% if row.tuijian_fanli_jine %}checked{% endif %}/>固定金额 </label>
+		<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_bili" {% if row.tuijian_fanli_bili %}checked{% endif %} readonly />百分比 </label>
+		<label style="font-size:14px;margin-left: 50px;"><input name="tuijian_fanli_fangshi" type="radio" value="tuijian_fanli_jine" {% if row.tuijian_fanli_jine %}checked{% endif %} readonly />固定金额 </label>
 	</div>
 
 	<div class="ad-infor-next">
-		<p class="one">推荐返利比例</p><input type="text" name="" value="{{row.tuijian_fanli_bili}}" class="two tuijian_fanli_bili">
+		<p class="one">推荐返利比例</p><input type="text" name="" value="{{row.tuijian_fanli_bili}}" class="two tuijian_fanli_bili" readonly>
 	</div>
 	<div class="ad-infor-next">
 		<p class="one">推荐返利金额(元)</p><input type="text" name="" value="{{row.tuijian_fanli_jine}}" class="two tuijian_fanli_jine" readOnly>
 	</div>
 
 	<div class="ad-infor-next ad-infor-next-left">
-		<p class="one">项目优势</p><textarea class="three item_advantage">{{row.xiangmuyoushi|safe}}</textarea>
+		<p class="one">项目优势</p><textarea class="three item_advantage" readonly>{{row.xiangmuyoushi|safe}}</textarea>
 	</div>
 	<div class="ad-infor-next">
-		<p class="one">项目描述</p><textarea class="three item_describe" id="item_describe" style="width:534px;height:140px;" >{{row.description|safe}}</textarea>
+		<p class="one">项目描述</p><textarea class="three item_describe" id="item_describe" style="width:534px;height:140px;" readonly >{{row.description|safe}}</textarea>
 	</div>
 
 	<div class="ad-infor-next">
-		<p class="one">上传图片</p><input type="file" name="files" value="" class="four image" id="fileupload" multiple>
+		<p class="one">上传图片</p><input type="file"  name="files" value="" class="four image" id="fileupload" multiple>
 	</div>
 	<div id="add_pictures">
 
 	</div>
-	<div class="ad-infor-next float-right">
-		<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
-		<input type="submit" name="" value="预览" class="five">
-		<input type="submit" name="" value="保存" class="five" id="save" data-tenant="{{row.tenant_id}}">
-		<input type="submit" name="" value="返回" class="five" id="back">
+	<div class="ad-infor-next float-right" id="float-right">
+		<span class="five" id="back"><a href="shelve_projects">返 回</a></span>
 	</div>
 
 </div>
