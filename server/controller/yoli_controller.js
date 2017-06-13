@@ -429,6 +429,37 @@ exports.register = function(server, options, next){
 		//编辑项目
 		{
 			method: 'GET',
+			path: '/read_project',
+			handler: function(request, reply){
+				var user_id = get_user_id(request);
+				if (!user_id) {
+					return reply.redirect("/login");
+				}
+				var id = request.query.id;
+				search_projects_infos(user_id,function(err,results){
+					if (!err) {
+						find_project_detail(id,function(err,row){
+							if (!err) {
+								var images = row.project.images;
+								var images_url = [];
+								for (var i = 0; i < images.length; i++) {
+									images_url.push(images[i].url);
+								}
+								console.log("images_url:"+images_url);
+								return reply.view("read_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":images_url});
+							}else {
+								return reply({"success":false,"message":result.message});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":results.message,"service_info":results.service_info});
+					}
+				});
+			}
+		},
+		//编辑项目
+		{
+			method: 'GET',
 			path: '/edit_project',
 			handler: function(request, reply){
 				var user_id = get_user_id(request);
