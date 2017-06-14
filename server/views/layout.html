@@ -608,11 +608,11 @@
 			<ul class="bottom-ul fan0">
               <a href="/customer_order">
                 <li class="word1"><img src="images/kehuyuyue.png" alt=""></li>
-                <li class="word2">客户预约
-                    {% if results.subscribes_num_info.daiqueren %}
-                        <p class="number"><span>{{results.subscribes_num_info.daiqueren}}</span></p>
+                <li class="word2">客户预约</li>
+                <li class="word3">
+                    {% if results.subscribes_num_info.yiyuyue %}
+                        <p class="number"><span>{{results.subscribes_num_info.yiyuyue}}</span></p>
                     {% endif %}</li>
-                <li class="word3"></li>
               </a>
             </ul>
           <ul class="bottom-ul fan1">
@@ -626,14 +626,21 @@
 			<a href="/yiqueren">
 			  <li class="word1"><img src="images/querenfanli.png" alt=""></li>
 			  <li class="word2">确认返利</li>
-			  <li class="word3"></li>
+			  <li class="word3">
+                  {% if results.subscribes_num_info.yiqueren %}
+                      <p class="number"><span>{{results.subscribes_num_info.yiqueren}}</span></p>
+                  {% endif %}</li>
 			</a>
 		  </ul>
           <ul class="bottom-ul fan3">
             <a href="/yiwancheng">
               <li class="word1"><img src="images/fanlichenggong.png" alt=""></li>
               <li class="word2">返利成功</li>
-              <li class="word3"></li>
+              <li class="word3">
+                  {% if results.subscribes_num_info.wancheng %}
+                      <p class="number"><span>{{results.subscribes_num_info.wancheng}}</span></p>
+                  {% endif %}
+              </li>
             </a>
           </ul>
           <ul class="bottom-ul fan4">
