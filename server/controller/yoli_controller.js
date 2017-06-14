@@ -381,7 +381,6 @@ exports.register = function(server, options, next){
                 	address : project_infos.address,
 					price_text : project_infos.price_text
 				};
-				console.log("project_data:"+JSON.stringify(project_data));
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						update_project(project_data,function(err,content){
@@ -445,7 +444,6 @@ exports.register = function(server, options, next){
 								for (var i = 0; i < images.length; i++) {
 									images_url.push(images[i].url);
 								}
-								console.log("images_url:"+images_url);
 								return reply.view("read_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":images_url});
 							}else {
 								return reply({"success":false,"message":result.message});
@@ -476,8 +474,7 @@ exports.register = function(server, options, next){
 								for (var i = 0; i < images.length; i++) {
 									images_url.push(images[i].url);
 								}
-								console.log("images_url:"+images_url);
-								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":images_url});
+								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":JSON.stringify(images_url)});
 							}else {
 								return reply({"success":false,"message":result.message});
 							}
@@ -582,7 +579,6 @@ exports.register = function(server, options, next){
 				var data = {};
 				data.project_id = request.payload.project_id;
 				data.user_id = user_id;
-				console.log("data:"+JSON.stringify(data));
 				vertify(data, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -591,7 +587,7 @@ exports.register = function(server, options, next){
 							return reply({"success":false,"message":rows.message,"service_info":service_info});
 						}
 					}else {
-						return reply({"success":false,"message":"operation wrong","service_info":service_info});
+						return reply({"success":false,"message":rows.message,"service_info":service_info});
 					}
 				});
 			}
@@ -818,7 +814,6 @@ exports.register = function(server, options, next){
 				get_tenant_info(id, function(err,row){
 					if (!err) {
 						if (row.success) {
-							console.log(row);
 							return reply({"success":true,"tenant_info":row.row,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -841,7 +836,6 @@ exports.register = function(server, options, next){
 				daiqueren(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log(rows);
 							return reply({"success":true,"order_infos":rows.rows,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1013,7 +1007,6 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						customer_order(user_id, function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
 									for (var i = 0; i < rows.rows.length; i++) {
@@ -1053,7 +1046,6 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						daiqueren(user_id, function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
 
@@ -1083,10 +1075,8 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						yiqueren(user_id, function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
 									return reply.view("yiqueren",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1114,10 +1104,8 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						yiwancheng(function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
 									return reply.view("yiwancheng",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1145,10 +1133,8 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						yijujue(function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
 									return reply.view("yijujue",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1175,10 +1161,8 @@ exports.register = function(server, options, next){
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						shensuzhong(user_id, function(err,rows){
-							console.log("rows:"+JSON.stringify(rows));
 							if (!err) {
 								if (rows.success) {
-									console.log(rows);
 									return reply.view("shensuzhong",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1246,7 +1230,6 @@ exports.register = function(server, options, next){
 						get_tenant_info(id, function(err,row){
 							if (!err) {
 								if (row.success) {
-									console.log(row);
 									return reply.view("tenant",{"row":row.row,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1301,7 +1284,6 @@ exports.register = function(server, options, next){
 				yiqueren(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log(rows);
 							return reply({"success":true,"make_sure_infos":rows.rows,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1324,7 +1306,6 @@ exports.register = function(server, options, next){
 				yiwancheng(id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log(rows);
 							return reply({"success":true,"finish_project_infos":rows.rows,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1347,7 +1328,6 @@ exports.register = function(server, options, next){
 				shensuzhong(user_id, function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log(rows);
 							return reply({"success":true,"appeal_project_infos":rows.rows,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1395,7 +1375,6 @@ exports.register = function(server, options, next){
                 	address : project_infos.address,
 					price_text : project_infos.price_text
 				};
-				console.log("project_data:"+JSON.stringify(project_data));
 				search_projects_infos(user_id,function(err,results){
 					if (!err) {
 						save_project(project_data,function(err,content){
@@ -1443,7 +1422,6 @@ exports.register = function(server, options, next){
 				check_project(id, function(err,row){
 					if (!err) {
 						if (row.success) {
-							console.log(row);
 							return reply({"success":true,"project_info":row.project,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1471,7 +1449,6 @@ exports.register = function(server, options, next){
 				project_detail_number(user_id, function(err,row){
 					if (!err) {
 						if (row.success) {
-							console.log(row);
 							return reply({"success":true,"project_info":row.projects,"subscribes_info":row.subscribes,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":"search wrong","service_info":service_info});
@@ -1490,7 +1467,6 @@ exports.register = function(server, options, next){
 				var data = {};
 				data.project_subscribe_id = request.payload.project_subscribe_id;
 				data.contract_amount = request.payload.contract_amount;
-				console.log("data:"+JSON.stringify(data));
 				confirm_order(data, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1516,7 +1492,6 @@ exports.register = function(server, options, next){
 				var data = {};
 				data.project_id = request.payload.project_id;
 				data.user_id = user_id;
-				console.log("data:"+JSON.stringify(data));
 				up_project(data, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1542,7 +1517,6 @@ exports.register = function(server, options, next){
 				var data = {};
 				data.project_id = request.payload.project_id;
 				data.user_id = user_id;
-				console.log("data:"+JSON.stringify(data));
 				down_project(data, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1566,7 +1540,6 @@ exports.register = function(server, options, next){
 				data.project_id = 7;
 				data.image_src = "";
 				data.is_main_image = 0;
-				console.log("data:"+JSON.stringify(data));
 				down_project(data, function(err,rows){
 					if (!err) {
 						if (rows.success) {
@@ -1604,15 +1577,12 @@ exports.register = function(server, options, next){
 				   parse: true //or just remove this line since true is the default
 				},
 				handler:function (request, reply) {
-					console.log("payload:"+JSON.stringify(request.payload));
 					var filepath = request.payload.files.path;
 					var out_name = path.extname(request.payload.files.filename);
-					console.log("payload:"+JSON.stringify(request.payload));
 					fs.readFile(filepath, function (err, data) {
 						var filename = uuidV1() + out_name;
 						var newPath = "public/images/" +filename;
 						// var newPath = __dirname + '/' + filename;
-						console.log(newPath);
 						fs.writeFile(newPath, data, function (err) {
 							return reply({"src":filename});
 						});
