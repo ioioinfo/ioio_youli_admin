@@ -137,8 +137,6 @@
 
 	</div>
 	<div class="ad-infor-next float-right">
-		<input type="submit" name="" value="取消" class="five five-backgroung" id="add_cancel">
-		<input type="submit" name="" value="预览" class="five">
 		<input type="submit" name="" value="保存" class="five" id="save" data-tenant="{{row.tenant_id}}">
 		<input type="submit" name="" value="返回" class="five" id="back">
 	</div>
@@ -298,15 +296,15 @@ $(function() {
 			 $.post("/update_project",{project_infos:JSON.stringify(project_infos)},function(data){
 				 if (data.success) {
 				 	alert("保存成功！");
-                    location.href = "/shelve_projects";
+                    location.href = "/unshelve_projects";
 				 }
 			 })
 		 });
 		 $("#back").click(function(){
-			 location.href = "/shelve_projects";
+			 location.href = "/unshelve_projects";
 		 });
 
-	$(".list-infor4").addClass("hover");
+	$(".list-infor3").addClass("hover");
 	$(".ad-infor").css("display","block");
 	$(".name").focus();
 	$("#add_cancel").click(function(){
