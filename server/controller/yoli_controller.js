@@ -280,6 +280,7 @@ exports.register = function(server, options, next){
 					ep.emit("project_num_info", project_num_info);
 					ep.emit("subscribes_num_info", subscribes_num_info);
 					ep.emit("withdraw_num_info", row.withdraw);
+					
 				}else {
 					ep.emit("project_num_info", {});
 					ep.emit("subscribes_num_info", {});

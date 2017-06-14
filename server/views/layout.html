@@ -608,7 +608,10 @@
 			<ul class="bottom-ul fan0">
               <a href="/customer_order">
                 <li class="word1"><img src="images/kehuyuyue.png" alt=""></li>
-                <li class="word2">客户预约</li>
+                <li class="word2">客户预约
+                    {% if results.subscribes_num_info.daiqueren %}
+                        <p class="number"><span>{{results.subscribes_num_info.daiqueren}}</span></p>
+                    {% endif %}</li>
                 <li class="word3"></li>
               </a>
             </ul>
