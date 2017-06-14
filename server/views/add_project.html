@@ -309,7 +309,9 @@ $(function() {
 				 if (data.success) {
  				 	alert("保存成功！");
                     location.href ="/unshelve_projects"
-				 }
+                }else {
+                    alert(data.message);
+                }
 			 })
 		 });
 	};
