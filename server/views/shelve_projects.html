@@ -227,7 +227,7 @@
 		$(".tanchusubmit0").click(function(){
 			$.post("/vertify",{"project_id":project_id},function(data){
 				if (data.success) {
-					location.href ="/shelve_projects";
+					location.href ="/approve_projects";
 				}else {
 				}
 			});
