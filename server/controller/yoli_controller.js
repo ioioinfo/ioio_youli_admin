@@ -587,7 +587,7 @@ exports.register = function(server, options, next){
 							return reply({"success":false,"message":rows.message,"service_info":service_info});
 						}
 					}else {
-						return reply({"success":false,"message":"operation wrong","service_info":service_info});
+						return reply({"success":false,"message":rows.message,"service_info":service_info});
 					}
 				});
 			}
