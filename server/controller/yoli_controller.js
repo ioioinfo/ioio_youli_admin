@@ -28,6 +28,14 @@ var banks = {
         ,"hsbc":{"name":"汇丰银行"}
 };
 
+var state = {
+	"yiyuyue":"已预约",
+	"wancheng":"完成",
+	"shensuzhong":"申诉中",
+	"yiqueren":"已确认",
+	"yijujue":"已拒绝"
+};
+
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
@@ -280,7 +288,7 @@ exports.register = function(server, options, next){
 					ep.emit("project_num_info", project_num_info);
 					ep.emit("subscribes_num_info", subscribes_num_info);
 					ep.emit("withdraw_num_info", row.withdraw);
-					
+
 				}else {
 					ep.emit("project_num_info", {});
 					ep.emit("subscribes_num_info", {});
@@ -1164,6 +1172,9 @@ exports.register = function(server, options, next){
 						shensuzhong(user_id, function(err,rows){
 							if (!err) {
 								if (rows.success) {
+									for (var i = 0; i < rows.rows.length; i++) {
+										rows.rows[i].state = state[rows.rows[i].state];
+									}
 									return reply.view("shensuzhong",{"rows":rows.rows,"results":results,"service_info":service_info});
 								}else {
 									return reply({"success":false,"message":"search wrong","service_info":service_info});
