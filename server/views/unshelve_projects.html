@@ -52,7 +52,10 @@
         <div class="product_infor">
             {{project_info.tenant.abbreviation}}
         </div>
-		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">上架</p></div>
+		<div class="operation">
+			<p class="shelve" data-id="{{project_info.id}}">上架</p>
+			<p class="operation_edit" data-id="{{project_info.id}}">编辑</p>
+		</div>
 	  </div>
 	{% endfor %}
  {% endif %}
