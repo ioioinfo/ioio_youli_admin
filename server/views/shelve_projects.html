@@ -178,7 +178,7 @@
         <div class="product_infor">
             {{project_info.tenant.abbreviation}}
         </div>
-		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">审核</p><p class="edit" data-id="{{project_info.id}}"><a href="#">浏览</a></p></div>
+		<div class="operation"><p class="shelve" data-id="{{project_info.id}}">审核</p><p><a href="/read_project?project_id={{project_info.id}}">编辑</a></p></div></div>
 	  </div>
 	{% endfor %}
 
