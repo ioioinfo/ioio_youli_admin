@@ -147,6 +147,7 @@
 
 	</div>
 	<div class="ad-infor-next float-right" id="float-right">
+        <span class="five push_back" id="back">打 回</span>
 		<span class="five" id="back"><a href="shelve_projects">返 回</a></span>
 	</div>
 
@@ -174,10 +175,19 @@
 <script>
 $(function() {
     var ue = UM.getEditor('item_describe');
-
 	$(".list-infor4").addClass("hover");
 	$(".ad-infor").css("display","block");
 	$(".name").focus();
+
+    $(".push_back").click(function(){
+        $.post("/down_project",{"project_id":"{{row.id}}"},function(data){
+            if (data.success) {
+                location.href ="/shelve_projects";
+            }else {
+                alert(data.message);
+            }
+        });
+    });
 
 });
 
