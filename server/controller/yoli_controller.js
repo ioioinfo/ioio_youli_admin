@@ -643,7 +643,7 @@ exports.register = function(server, options, next){
 								}
 								return reply.view("pre_get_cash",{"rows":data,"results":results,"service_info":service_info,"cash_map":cash_map});
 							}else {
-								return reply({"success":false,"message":result.message,"service_info":results.service_info});
+								return reply({"success":false,"message":rows.message,"service_info":results.service_info});
 							}
 						});
 					}else {
@@ -1020,8 +1020,10 @@ exports.register = function(server, options, next){
 								if (rows.success) {
 									for (var i = 0; i < rows.rows.length; i++) {
 										var project = rows.rows[i];
-										if (project.wx_user) {
-											project.wx_user.mobile  = project.wx_user.mobile.substring(0,project.wx_user.mobile.length-2)+"**";
+										if (project.recommender_wx_user) {
+											if (project.wx_user) {
+												project.wx_user.mobile  = project.wx_user.mobile.substring(0,project.wx_user.mobile.length-2)+"**";
+											}
 										}
 										// if (project.recommender_wx_user) {
 										// 	if (project.recommender_valid != 1) {
@@ -1208,6 +1210,12 @@ exports.register = function(server, options, next){
 						}else if(!begin_date||!end_date) {
 							list_wancheng_subscribes(tenant_id,function(err,rows){
 								if (!err) {
+									var total_amount = 0;
+									var total_tuijian = 0;
+									for (var i = 0; i < rows.length; i++) {
+										total_amount = total_amount + rows[i].shiji_fanli_amount;
+										total_tuijian = total_tuijian + rows[i].shiji_tuijian_fanli_amount;
+									}
 									return reply.view("fanli_tongji",{"rows":rows.rows,"service_info":service_info,"results":results});
 								}else {
 									return reply({"success":false,"message":rows.message,"service_info":results.service_info});
@@ -1406,7 +1414,7 @@ exports.register = function(server, options, next){
 										if (!err) {
 
 										}else {
-											
+
 										}
 									});
 								}
