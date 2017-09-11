@@ -453,7 +453,8 @@ exports.register = function(server, options, next){
 								for (var i = 0; i < images.length; i++) {
 									images_url.push(images[i].url);
 								}
-								return reply.view("read_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":images_url});
+								
+								return reply.view("read_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":JSON.stringify(images_url)});
 							}else {
 								return reply({"success":false,"message":result.message});
 							}
@@ -483,6 +484,7 @@ exports.register = function(server, options, next){
 								for (var i = 0; i < images.length; i++) {
 									images_url.push(images[i].url);
 								}
+
 								return reply.view("edit_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":JSON.stringify(images_url)});
 							}else {
 								return reply({"success":false,"message":result.message});

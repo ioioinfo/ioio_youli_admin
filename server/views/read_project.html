@@ -189,6 +189,8 @@ $(function() {
 	$(".list-infor4").addClass("hover");
 	$(".ad-infor").css("display","block");
 	$(".name").focus();
+    var images = {{images_url|safe}};
+	var image_host = "{{image_host}}";
 
     $(".push_back").click(function(){
         $.post("/down_project",{"project_id":"{{row.id}}"},function(data){
@@ -199,6 +201,20 @@ $(function() {
             }
         });
     });
+
+    //刷新图片模板
+	var fresh_images = function(){
+		var tep = _.template($("#add_pictures_infos").html());
+		$("#add_pictures").html(tep({images:images,image_host:image_host}));
+		//上传图片删除
+		$(".image_delete").click(function(){
+			var id = $(this).data("id");
+			images.splice(id,1);
+			fresh_images();
+		});
+	}
+    fresh_images();
+
 
 });
 
