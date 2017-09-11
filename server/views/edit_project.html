@@ -154,7 +154,7 @@
 	<% if (images.length>0) { %>
 		<% _.forEach(images, function(image,index) { %>
 			<% if (index == 0) { %>
-				<div class="add_product_img1"><img src="<%- image_host %><%- image %>" width="50px"/><input type='submit' value='主图 删除' class='image_delete' data-id ="<%- index %>"></div>
+				<div class="add_product_img1"><img src="<%- image_host %><%- image %>" width="50px"/><input type='submit' value='主图 删除' class='image_delete' data-id ="<%- index %>" data-image="<%- image %>"></div>
 			<% } else { %>
 				<div class="add_product_img2"><img src="<%- image_host %><%- image %>" width="30px"/><input type='submit' value='删除' class='image_delete' data-id ="<%- index %>"></div>
 			<% }%>
@@ -187,12 +187,16 @@ $(function() {
 
 	//刷新图片模板
 	var fresh_images = function(){
+        console.log("images:"+images);
 		var tep = _.template($("#add_pictures_infos").html());
 		$("#add_pictures").html(tep({images:images,image_host:image_host}));
 		//上传图片删除
 		$(".image_delete").click(function(){
 			var id = $(this).data("id");
+            var image = $(this).data("image");
+            
 			images.splice(id,1);
+            console.log("images_after_delete:"+images);
 			fresh_images();
 		});
 	}
@@ -205,12 +209,6 @@ $(function() {
 			  images.push(data._response.result.src);
 			  fresh_images();
 			}
-		});
-		//上传图片删除
-		$(".image_delete").click(function(){
-			var id = $(this).data("id");
-			images.splice(id,1);
-			fresh_images();
 		});
 
 
