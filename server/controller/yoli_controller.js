@@ -404,6 +404,7 @@ exports.register = function(server, options, next){
 											img_data = {
 												"project_id" : project_infos.id,
 												"image_src" : project_infos.images[i],
+												"order_index":i
 											};
 											if (i==0) {
 												img_data.is_main_image = 1;
@@ -453,7 +454,6 @@ exports.register = function(server, options, next){
 								for (var i = 0; i < images.length; i++) {
 									images_url.push(images[i].url);
 								}
-								
 								return reply.view("read_project",{"success":true,"message":"ok","row":row.project,"results":results,"images_url":JSON.stringify(images_url)});
 							}else {
 								return reply({"success":false,"message":result.message});
@@ -1406,6 +1406,7 @@ exports.register = function(server, options, next){
 									img_data = {
 										"project_id" : content.project_id,
 										"image_src" : project_infos.images[i],
+										"order_index":i
 									};
 									if (i==0) {
 										img_data.is_main_image = 1;
