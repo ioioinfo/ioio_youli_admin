@@ -1023,8 +1023,12 @@ exports.register = function(server, options, next){
 									for (var i = 0; i < rows.rows.length; i++) {
 										var project = rows.rows[i];
 										if (project.recommender_wx_user) {
-											if (project.wx_user) {
-												project.wx_user.mobile  = project.wx_user.mobile.substring(0,project.wx_user.mobile.length-2)+"**";
+											if (project.recommender_valid ==1) {
+
+											}else {
+												if (project.wx_user) {
+													project.wx_user.mobile  = project.wx_user.mobile.substring(0,project.wx_user.mobile.length-2)+"**";
+												}
 											}
 										}
 										// if (project.recommender_wx_user) {
