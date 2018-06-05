@@ -1,10 +1,10 @@
-﻿var Hapi = require('hapi');
+var Hapi = require('hapi');
 // Create a server with a host and port
 var server = new Hapi.Server();
 
 // Setup the server with a host and port
 server.connection({
-    port: parseInt(process.env.PORT, 10) || 18102,
+    port: parseInt(process.env.PORT, 10) || 17002,
     host: '0.0.0.0'
 });
 
@@ -49,7 +49,7 @@ server.register([
 	{
         register: require("good"),
         options: {
-            ops: {interval: 5000},
+            ops: false,
             reporters: {
                 myConsoleReporter: [{
                     module: 'good-console'
